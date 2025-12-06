@@ -187,9 +187,105 @@
     const BASE_IMAGE_URL = 'https://ddjj577.github.io/neuroanatomyquiz/'; 
 
     // ---------------------------------------------
-    // 1. QUIZ DATA (FROM YOUR WORD FILE, UPDATED WITH FULL URLS)
+    // 1. QUIZ DATA (FINAL VERSION with CORRECT FILENAMES)
+    // NOTE: Filenames are corrected to use the format "set X pic.jpg" 
+    // and "set X pic.png" based on the uploaded file list.
     // ---------------------------------------------
     const allQuizData = {
+        "Set_1_basal ganglia answers": [
+            { label: "1", structure: "caput nucleus caudatus", filename: "set 1 pic.jpg" },
+            { label: "2", structure: "cauda nucleus caudatus", filename: "set 1 pic.jpg" },
+            { label: "3", structure: "nucleus lentiformis", filename: "set 1 pic.jpg" },
+            { label: "4", structure: "thalamus sin.", filename: "set 1 pic.jpg" },
+            { label: "5", structure: "thalamus dx.", filename: "set 1 pic.jpg" },
+            { label: "6", structure: "ventriculus III", filename: "set 1 pic.jpg" }
+        ],
+        "Set_2_horizontal answers": [
+            { label: "1", structure: "ventr. lat. cornu ant.", filename: "set 2 pic.jpg" },
+            { label: "2", structure: "ventr. lat. cornu inf.", filename: "set 2 pic.jpg" },
+            { label: "3", structure: "septum pellucidum", filename: "set 2 pic.jpg" },
+            { label: "4", structure: "ventriculus III", filename: "set 2 pic.jpg" },
+            { label: "5", structure: "capsula interna", filename: "set 2 pic.jpg" },
+            { label: "6", structure: "thalamus", filename: "set 2 pic.jpg" },
+            { label: "7", structure: "corpus callosum", filename: "set 2 pic.jpg" },
+            { label: "8", structure: "fornix", filename: "set 2 pic.jpg" },
+            { label: "9", structure: "globus pallidus", filename: "set 2 pic.jpg" },
+            { label: "10", structure: "putamen", filename: "set 2 pic.jpg" },
+            { label: "11", structure: "claustrum", filename: "set 2 pic.jpg" },
+            { label: "12", structure: "insula", filename: "set 2 pic.jpg" },
+            { label: "13", structure: "caput nucleus caudatus", filename: "set 2 pic.jpg" },
+            { label: "14", structure: "cauda nucleus caudatus", filename: "set 2 pic.jpg" }
+        ],
+        "Set_3_medial answers": [
+            { label: "1", structure: "corpus callosum", filename: "set 3 pic.jpg" },
+            { label: "2", structure: "septum pellucidum", filename: "set 3 pic.jpg" },
+            { label: "3", structure: "fornix", filename: "set 3 pic.jpg" },
+            { label: "4", structure: "commissura anterior", filename: "set 3 pic.jpg" },
+            { label: "5", structure: "commissura posterior", filename: "set 3 pic.jpg" },
+            { label: "6", structure: "plexus choroideus ventr. III", filename: "set 3 pic.jpg" },
+            { label: "7", structure: "hypothalamus", filename: "set 3 pic.jpg" },
+            { label: "8", structure: "thalamus", filename: "set 3 pic.jpg" },
+            { label: "9", structure: "corpus mammillare", filename: "set 3 pic.jpg" },
+            { label: "10", structure: "foramen interventriculare", filename: "set 3 pic.jpg" },
+            { label: "11", structure: "ventriculus IV", filename: "set 3 pic.jpg" },
+            { label: "12", structure: "plexus choroideus ventr. IV", filename: "set 3 pic.jpg" },
+            { label: "13", structure: "aqueductus cerebri", filename: "set 3 pic.jpg" },
+            { label: "14", structure: "corpus pineale", filename: "set 3 pic.jpg" },
+            { label: "15", structure: "mesencephalon", filename: "set 3 pic.jpg" },
+            { label: "16", structure: "pons", filename: "set 3 pic.jpg" }
+        ],
+        "Set_4_ventricules answers": [
+            { label: "1", structure: "ventr. lat. cornu posterius", filename: "set 4 pic.jpg" },
+            { label: "2", structure: "ventr. lat. pars centralis", filename: "set 4 pic.jpg" },
+            { label: "3", structure: "ventr. lat. cornu anterius", filename: "set 4 pic.jpg" },
+            { label: "4", structure: "aqueductus cerebri", filename: "set 4 pic.jpg" },
+            { label: "5", structure: "venr. lat. cornu laterale", filename: "set 4 pic.jpg" },
+            { label: "6", structure: "ventriculus IV", filename: "set 4 pic.jpg" },
+            { label: "7", structure: "canalis centralis", filename: "set 4 pic.jpg" },
+            { label: "8", structure: "aperturae lat. ventr. IV", filename: "set 4 pic.jpg" },
+            { label: "9", structure: "apertura med. ventr. IV", filename: "set 4 pic.jpg" },
+            { label: "10", structure: "ventriculus III", filename: "set 4 pic.jpg" },
+            { label: "11", structure: "foramen interventriculare", filename: "set 4 pic.jpg" },
+            { label: "12", structure: "adhesio intrathalamica", filename: "set 4 pic.jpg" }
+        ],
+        "Set_5_mesencephalon_coronal section answers": [
+            { label: "a", structure: "Medial geniculate nucleus", filename: "set 5 pic.png" }, // Using .png based on your list
+            { label: "b", structure: "Lateral geniculate nucleus", filename: "set 5 pic.png" },
+            { label: "c", structure: "Aqueductus cerebri", filename: "set 5 pic.png" },
+            { label: "d", structure: "Crus cerebri", filename: "set 5 pic.png" },
+            { label: "e", structure: "Substantia nigra", filename: "set 5 pic.png" },
+            { label: "f", structure: "Nucleus raphne", filename: "set 5 pic.png" },
+            { label: "g", structure: "Nucleus ruber", filename: "set 5 pic.png" },
+            { label: "h", structure: "Nervus Oculomotorius", filename: "set 5 pic.png" },
+            { label: "i", structure: "Colliculus superior", filename: "set 5 pic.png" },
+            { label: "j", structure: "Periaquaductal gray", filename: "set 5 pic.png" },
+            { label: "k", structure: "Basis pedunculi = crus cerebri, substantia nigra", filename: "set 5 pic.png" },
+            { label: "L*", structure: "Tectum = Superior colliculus, inferior colliculus", filename: "set 5 pic.png" },
+            { label: "M*", structure: "Tegmentum = Red nucleus, Periaqueductal gray, Reticular formation, Cranial nerve nuclei, ascending/descending pathways (except CST/CBT)", filename: "set 5 pic.png" },
+            { label: "N*", structure: "Pedunculus cerebri = tegmentum, basis pedunculi, pretectum", filename: "set 5 pic.png" }
+        ],
+        "Set_6_medullaoblongata_answers": [
+            { label: "a", structure: "Dorsal motor nucleus of vagus", filename: "set 6 pic.jpg" },
+            { label: "b", structure: "CN V sensory nuclei", filename: "set 6 pic.jpg" },
+            { label: "c", structure: "Inferior olivary nucleus", filename: "set 6 pic.jpg" },
+            { label: "d", structure: "Corticospinal fibers in the pyramid", filename: "set 6 pic.jpg" },
+            { label: "e", structure: "Medial lemniscus", filename: "set 6 pic.jpg" },
+            { label: "f", structure: "Spinothalamic tract", filename: "set 6 pic.jpg" },
+            { label: "g", structure: "Inferior cerebellar peduncle", filename: "set 6 pic.jpg" },
+            { label: "h", structure: "Tectospinal tract", filename: "set 6 pic.jpg" },
+            { label: "i", structure: "Hypoglossal nuclei", filename: "set 6 pic.jpg" },
+            { label: "j", structure: "Medial longitudinal fasciculus", filename: "set 6 pic.jpg" }
+        ],
+        "Set_7 answers": [
+            { label: "1", structure: "sulcus centralis", filename: "set 7 pic.jpg" },
+            { label: "2", structure: "sulcus lateralis", filename: "set 7 pic.jpg" },
+            { label: "3", structure: "sulcus parieto-occipitalis", filename: "set 7 pic.jpg" },
+            { label: "4", structure: "gyrus precentralis", filename: "set 7 pic.jpg" },
+            { label: "5", structure: "gyrus postcentralis", filename: "set 7 pic.jpg" },
+            { label: "6", structure: "gyrus temporalis superior", filename: "set 7 pic.jpg" },
+            { label: "7", structure: "gyrus temporalis media", filename: "set 7 pic.jpg" },
+            { label: "8", structure: "gyrus temporalis inferior", filename: "set 7 pic.jpg" }
+        ],
         "set 8 answers": [
             { label: "1", structure: "fissura longitudinalis", filename: "set 8 pic.jpg" },
             { label: "2", structure: "bulbus olfactorius", filename: "set 8 pic.jpg" },
@@ -405,102 +501,10 @@
             { label: "12", structure: "pons", filename: "set 22 pic.jpg" },
             { label: "13", structure: "medulla oblongata", filename: "set 22 pic.jpg" },
             { label: "14", structure: "fjärde ventrikeln", filename: "set 22 pic.jpg" }
-        ],
-        "Set_1_basal ganglia answers": [
-            { label: "1", structure: "caput nucleus caudatus", filename: "Set_1_basal ganglia pic.jpg" },
-            { label: "2", structure: "cauda nucleus caudatus", filename: "Set_1_basal ganglia pic.jpg" },
-            { label: "3", structure: "nucleus lentiformis", filename: "Set_1_basal ganglia pic.jpg" },
-            { label: "4", structure: "thalamus sin.", filename: "Set_1_basal ganglia pic.jpg" },
-            { label: "5", structure: "thalamus dx.", filename: "Set_1_basal ganglia pic.jpg" },
-            { label: "6", structure: "ventriculus III", filename: "Set_1_basal ganglia pic.jpg" }
-        ],
-        "Set_2_horizontal answers": [
-            { label: "1", structure: "ventr. lat. cornu ant.", filename: "Set_2_horizontal pic.jpg" },
-            { label: "2", structure: "ventr. lat. cornu inf.", filename: "Set_2_horizontal pic.jpg" },
-            { label: "3", structure: "septum pellucidum", filename: "Set_2_horizontal pic.jpg" },
-            { label: "4", structure: "ventriculus III", filename: "Set_2_horizontal pic.jpg" },
-            { label: "5", structure: "capsula interna", filename: "Set_2_horizontal pic.jpg" },
-            { label: "6", structure: "thalamus", filename: "Set_2_horizontal pic.jpg" },
-            { label: "7", structure: "corpus callosum", filename: "Set_2_horizontal pic.jpg" },
-            { label: "8", structure: "fornix", filename: "Set_2_horizontal pic.jpg" },
-            { label: "9", structure: "globus pallidus", filename: "Set_2_horizontal pic.jpg" },
-            { label: "10", structure: "putamen", filename: "Set_2_horizontal pic.jpg" },
-            { label: "11", structure: "claustrum", filename: "Set_2_horizontal pic.jpg" },
-            { label: "12", structure: "insula", filename: "Set_2_horizontal pic.jpg" },
-            { label: "13", structure: "caput nucleus caudatus", filename: "Set_2_horizontal pic.jpg" },
-            { label: "14", structure: "cauda nucleus caudatus", filename: "Set_2_horizontal pic.jpg" }
-        ],
-        "Set_3_medial answers": [
-            { label: "1", structure: "corpus callosum", filename: "Set_3_medial pic.jpg" },
-            { label: "2", structure: "septum pellucidum", filename: "Set_3_medial pic.jpg" },
-            { label: "3", structure: "fornix", filename: "Set_3_medial pic.jpg" },
-            { label: "4", structure: "commissura anterior", filename: "Set_3_medial pic.jpg" },
-            { label: "5", structure: "commissura posterior", filename: "Set_3_medial pic.jpg" },
-            { label: "6", structure: "plexus choroideus ventr. III", filename: "Set_3_medial pic.jpg" },
-            { label: "7", structure: "hypothalamus", filename: "Set_3_medial pic.jpg" },
-            { label: "8", structure: "thalamus", filename: "Set_3_medial pic.jpg" },
-            { label: "9", structure: "corpus mammillare", filename: "Set_3_medial pic.jpg" },
-            { label: "10", structure: "foramen interventriculare", filename: "Set_3_medial pic.jpg" },
-            { label: "11", structure: "ventriculus IV", filename: "Set_3_medial pic.jpg" },
-            { label: "12", structure: "plexus choroideus ventr. IV", filename: "Set_3_medial pic.jpg" },
-            { label: "13", structure: "aqueductus cerebri", filename: "Set_3_medial pic.jpg" },
-            { label: "14", structure: "corpus pineale", filename: "Set_3_medial pic.jpg" },
-            { label: "15", structure: "mesencephalon", filename: "Set_3_medial pic.jpg" },
-            { label: "16", structure: "pons", filename: "Set_3_medial pic.jpg" }
-        ],
-        "Set_4_ventricules answers": [
-            { label: "1", structure: "ventr. lat. cornu posterius", filename: "Set_4_ventricules pic.jpg" },
-            { label: "2", structure: "ventr. lat. pars centralis", filename: "Set_4_ventricules pic.jpg" },
-            { label: "3", structure: "ventr. lat. cornu anterius", filename: "Set_4_ventricules pic.jpg" },
-            { label: "4", structure: "aqueductus cerebri", filename: "Set_4_ventricules pic.jpg" },
-            { label: "5", structure: "venr. lat. cornu laterale", filename: "Set_4_ventricules pic.jpg" },
-            { label: "6", structure: "ventriculus IV", filename: "Set_4_ventricules pic.jpg" },
-            { label: "7", structure: "canalis centralis", filename: "Set_4_ventricules pic.jpg" },
-            { label: "8", structure: "aperturae lat. ventr. IV", filename: "Set_4_ventricules pic.jpg" },
-            { label: "9", structure: "apertura med. ventr. IV", filename: "Set_4_ventricules pic.jpg" },
-            { label: "10", structure: "ventriculus III", filename: "Set_4_ventricules pic.jpg" },
-            { label: "11", structure: "foramen interventriculare", filename: "Set_4_ventricules pic.jpg" },
-            { label: "12", structure: "adhesio intrathalamica", filename: "Set_4_ventricules pic.jpg" }
-        ],
-        "Set_5_mesencephalon_coronal section answers": [
-            { label: "a", structure: "Medial geniculate nucleus", filename: "Set_5_mesencephalon_coronal section pic.jpg" },
-            { label: "b", structure: "Lateral geniculate nucleus", filename: "Set_5_mesencephalon_coronal section pic.jpg" },
-            { label: "c", structure: "Aqueductus cerebri", filename: "Set_5_mesencephalon_coronal section pic.jpg" },
-            { label: "d", structure: "Crus cerebri", filename: "Set_5_mesencephalon_coronal section pic.jpg" },
-            { label: "e", structure: "Substantia nigra", filename: "Set_5_mesencephalon_coronal section pic.jpg" },
-            { label: "f", structure: "Nucleus raphne", filename: "Set_5_mesencephalon_coronal section pic.jpg" },
-            { label: "g", structure: "Nucleus ruber", filename: "Set_5_mesencephalon_coronal section pic.jpg" },
-            { label: "h", structure: "Nervus Oculomotorius", filename: "Set_5_mesencephalon_coronal section pic.jpg" },
-            { label: "i", structure: "Colliculus superior", filename: "Set_5_mesencephalon_coronal section pic.jpg" },
-            { label: "j", structure: "Periaquaductal gray", filename: "Set_5_mesencephalon_coronal section pic.jpg" },
-            { label: "k", structure: "Basis pedunculi = crus cerebri, substantia nigra", filename: "Set_5_mesencephalon_coronal section pic.jpg" },
-            { label: "L*", structure: "Tectum = Superior colliculus, inferior colliculus", filename: "Set_5_mesencephalon_coronal section pic.jpg" },
-            { label: "M*", structure: "Tegmentum = Red nucleus, Periaqueductal gray, Reticular formation, Cranial nerve nuclei, ascending/descending pathways (except CST/CBT)", filename: "Set_5_mesencephalon_coronal section pic.jpg" },
-            { label: "N*", structure: "Pedunculus cerebri = tegmentum, basis pedunculi, pretectum", filename: "Set_5_mesencephalon_coronal section pic.jpg" }
-        ],
-        "Set_6_medullaoblongata_answers": [
-            { label: "a", structure: "Dorsal motor nucleus of vagus", filename: "Set_6_medullaoblongata_answers pic.jpg" }, // Filename adjusted to match common pattern
-            { label: "b", structure: "CN V sensory nuclei", filename: "Set_6_medullaoblongata_answers pic.jpg" },
-            { label: "c", structure: "Inferior olivary nucleus", filename: "Set_6_medullaoblongata_answers pic.jpg" },
-            { label: "d", structure: "Corticospinal fibers in the pyramid", filename: "Set_6_medullaoblongata_answers pic.jpg" },
-            { label: "e", structure: "Medial lemniscus", filename: "Set_6_medullaoblongata_answers pic.jpg" },
-            { label: "f", structure: "Spinothalamic tract", filename: "Set_6_medullaoblongata_answers pic.jpg" },
-            { label: "g", structure: "Inferior cerebellar peduncle", filename: "Set_6_medullaoblongata_answers pic.jpg" },
-            { label: "h", structure: "Tectospinal tract", filename: "Set_6_medullaoblongata_answers pic.jpg" },
-            { label: "i", structure: "Hypoglossal nuclei", filename: "Set_6_medullaoblongata_answers pic.jpg" },
-            { label: "j", structure: "Medial longitudinal fasciculus", filename: "Set_6_medullaoblongata_answers pic.jpg" }
-        ],
-        "Set_7 answers": [
-            { label: "1", structure: "sulcus centralis", filename: "Set_7 pic.jpg" }, // Filename adjusted to match common pattern
-            { label: "2", structure: "sulcus lateralis", filename: "Set_7 pic.jpg" },
-            { label: "3", structure: "sulcus parieto-occipitalis", filename: "Set_7 pic.jpg" },
-            { label: "4", structure: "gyrus precentralis", filename: "Set_7 pic.jpg" },
-            { label: "5", structure: "gyrus postcentralis", filename: "Set_7 pic.jpg" },
-            { label: "6", structure: "gyrus temporalis superior", filename: "Set_7 pic.jpg" },
-            { label: "7", structure: "gyrus temporalis media", filename: "Set_7 pic.jpg" },
-            { label: "8", structure: "gyrus temporalis inferior", filename: "Set_7 pic.jpg" }
         ]
-        // NOTE: All other sets (17-22) are presumed to follow the set X pic.jpg naming convention.
+        // Sets 1-7 are replaced by the sets above to match your file naming scheme.
+        // If you had other files with the old complex names (like Set_1_basal ganglia pic.jpg), 
+        // they must be renamed to match "set X pic.jpg" on GitHub.
     };
 
     // ---------------------------------------------
