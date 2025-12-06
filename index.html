@@ -1,10 +1,10 @@
 <script>
-    // Base URL must point to the raw files for reliable loading
+    // ---------------------------------------------
+    // BASE CONFIGURATION & DATA (CRITICAL FIX: Filenames checked and verified)
+    // ---------------------------------------------
     const BASE_IMAGE_URL = 'https://raw.githubusercontent.com/ddjj577/neuroanatomyquiz/main/'; 
-
-    // ---------------------------------------------
-    // 1. QUIZ DATA (FINAL VERSION: NO SPACES IN FILENAMES, set 5 uses .png)
-    // ---------------------------------------------
+    
+    // QUIZ DATA (FINAL VERSION: NO SPACES IN FILENAMES, set 5 uses .png)
     const allQuizData = {
         "Set_1_basal ganglia answers": [
             { label: "1", structure: "caput nucleus caudatus", filename: "set1pic.jpg" },
@@ -63,7 +63,7 @@
             { label: "12", structure: "adhesio intrathalamica", filename: "set4pic.jpg" }
         ],
         "Set_5_mesencephalon_coronal section answers": [
-            { label: "a", structure: "Medial geniculate nucleus", filename: "set5pic.png" }, // <--- Corrected to .png
+            { label: "a", structure: "Medial geniculate nucleus", filename: "set5pic.png" }, // Corrected to .png
             { label: "b", structure: "Lateral geniculate nucleus", filename: "set5pic.png" },
             { label: "c", structure: "Aqueductus cerebri", filename: "set5pic.png" },
             { label: "d", structure: "Crus cerebri", filename: "set5pic.png" },
@@ -318,17 +318,160 @@
         ]
     };
 
-    // The rest of your existing JavaScript functions must follow immediately after this closing brace `}`.
-    // For example, if you have setupQuiz() and renderDropdown() functions:
 
-    function setupQuiz() {
-        // ... (your existing code for setupQuiz)
+    // ---------------------------------------------
+    // QUIZ LOGIC FUNCTIONS
+    // ---------------------------------------------
+
+    let currentSetData = [];
+    let currentQuestionIndex = 0;
+    let correctCount = 0;
+    let answeredCount = 0;
+    let quizHistory = [];
+    let currentSetName = "";
+
+    function initializeDropdown() {
+        const selector = document.getElementById('set-selector');
+        Object.keys(allQuizData).forEach(setName => {
+            const option = document.createElement('option');
+            option.value = setName;
+            option.textContent = setName.replace(/_/g, ' '); // Display name nicely
+            selector.appendChild(option);
+        });
+    }
+
+    function loadQuizSet() {
+        currentSetName = document.getElementById('set-selector').value;
+        if (!currentSetName) {
+            document.getElementById('question-area').style.display = 'none';
+            document.getElementById('end-quiz-button').style.display = 'none';
+            return;
+        }
+
+        currentSetData = allQuizData[currentSetName];
+        currentQuestionIndex = 0;
+        correctCount = 0;
+        answeredCount = 0;
+        quizHistory = [];
+        
+        document.getElementById('question-area').style.display = 'block';
+        document.getElementById('end-quiz-button').style.display = 'block';
+        updateStatus();
+        displayQuestion();
+    }
+
+    function displayQuestion() {
+        if (currentQuestionIndex >= currentSetData.length) {
+            endQuizAndReview();
+            return;
+        }
+
+        const question = currentSetData[currentQuestionIndex];
+        
+        // Construct the full image URL
+        const imageUrl = BASE_IMAGE_URL + question.filename;
+
+        document.getElementById('question-text').textContent = 
+            `Question ${currentQuestionIndex + 1}: What is the structure labeled as ${question.label} in ${currentSetName.replace(/ answers/i, '')}?`;
+        
+        document.getElementById('quiz-image').src = imageUrl;
+        document.getElementById('user-answer').value = '';
+        document.getElementById('user-answer').focus(); // Focus on the input field
+    }
+
+    function updateStatus() {
+        document.getElementById('correct-count').textContent = correctCount;
+        document.getElementById('answered-count').textContent = answeredCount;
+    }
+
+    function normalizeAnswer(answer) {
+        // Simple normalization: lower case and remove extra spaces/leading/trailing punctuation
+        return answer.toLowerCase().trim().replace(/[.,;*]$/, '').replace(/\s+/g, ' ');
+    }
+
+    function submitAnswer() {
+        if (currentQuestionIndex >= currentSetData.length) return;
+
+        const userAnswer = document.getElementById('user-answer').value;
+        const question = currentSetData[currentQuestionIndex];
+        const correctAnswer = question.structure;
+        
+        const normalizedUserAnswer = normalizeAnswer(userAnswer);
+        const normalizedCorrectAnswer = normalizeAnswer(correctAnswer);
+
+        // Simple strict comparison
+        const isCorrect = normalizedUserAnswer === normalizedCorrectAnswer;
+
+        if (answeredCount < currentSetData.length) {
+             answeredCount++;
+        }
+       
+        if (isCorrect) {
+            correctCount++;
+        }
+
+        // Store result for review
+        quizHistory.push({
+            label: question.label,
+            userAnswer: userAnswer,
+            correctAnswer: correctAnswer,
+            isCorrect: isCorrect
+        });
+
+        currentQuestionIndex++;
+        updateStatus();
+        displayQuestion();
+    }
+
+    function endQuizAndReview() {
+        // Hide quiz, show results container
+        document.getElementById('quiz-content').style.display = 'none';
+        document.getElementById('end-quiz-button').style.display = 'none';
+        document.getElementById('results-container').style.display = 'block';
+        
+        // Update final scores
+        document.getElementById('final-correct-count').textContent = correctCount;
+        document.getElementById('final-total-count').textContent = quizHistory.length;
+
+        // Build review list
+        const reviewArea = document.getElementById('review-area');
+        reviewArea.innerHTML = ''; 
+        const reviewList = document.createElement('ul');
+        reviewList.classList.add('review-list');
+
+        quizHistory.forEach((item, index) => {
+            const listItem = document.createElement('li');
+            listItem.classList.add('review-item');
+            
+            let statusText = item.isCorrect 
+                ? `<span class="correct">✅ Correct!</span>` 
+                : `<span class="incorrect">❌ Incorrect.</span>`;
+            
+            listItem.innerHTML = `
+                ${statusText} (Label **${item.label}**):
+                <br>
+                Your Answer: <strong>${item.userAnswer || '[No Answer]'}</strong>
+                <br>
+                Correct Answer: <strong>${item.correctAnswer}</strong>
+            `;
+            reviewList.appendChild(listItem);
+        });
+
+        reviewArea.appendChild(reviewList);
     }
     
-    function renderDropdown() {
-        // ... (your existing code for renderDropdown)
-    }
-    
-    // ... any other functions ...
+    // ---------------------------------------------
+    // INITIALIZATION
+    // ---------------------------------------------
+    window.onload = function() {
+        initializeDropdown();
+        
+        // Add event listener for Enter key to submit the answer
+        document.getElementById('user-answer').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                submitAnswer();
+            }
+        });
+    };
 
 </script>
