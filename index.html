@@ -102,6 +102,14 @@
             background-color: #1e7e34;
         }
 
+        #next-button {
+            background-color: var(--secondary-color);
+            color: white;
+        }
+        #next-button:hover {
+            background-color: #5a6268;
+        }
+
         #result-message {
             margin-top: 15px;
             padding: 10px;
@@ -149,11 +157,10 @@
             <div id="result-message">
                 </div>
         </div>
-
     </div>
 
     <script>
-        // Data parsed from the uploaded document
+        [cite_start]// Data parsed from the uploaded document [cite: 1]
         const QUIZ_DATA = [
             { set: 1, label: '1', answer: 'caput nucleus caudatus' },
             { set: 1, label: '2', answer: 'cauda nucleus caudatus' },
@@ -423,8 +430,6 @@
             { set: 22, label: '14', answer: 'fjärde ventrikeln' }
         ];
 
-        // --- Global State Variables ---
-        const IMAGE_BASE_URL = 'https://ddjdy577.github.io/ddjdy577/';
         let questions = []; // Array of question objects for the current quiz mode
         let currentQuestionIndex = 0;
         let score = 0;
@@ -470,10 +475,12 @@
             }
 
             const q = questions[currentQuestionIndex];
-            const imageUrl = `${IMAGE_BASE_URL}set${q.set}pic.jpg`;
+            // CORRECTED BASE URL: Uses the raw.githubusercontent.com path with the correct repository name
+            const IMAGE_BASE_URL = 'https://raw.githubusercontent.com/dddjy577/neuroanatomyquiz/main/'; 
+            const imageUrl = `${IMAGE_BASE_URL}set${q.set}pic.jpg`; 
 
             // Reset UI
-            document.getElementById('image-display').innerHTML = `<img src="${imageUrl}" alt="Neuroanatomy image from Set ${q.set}">`;
+            document.getElementById('image-display').innerHTML = `<img src="${imageUrl}" alt="Neuroanatomy image from Set ${q.set}" onerror="this.onerror=null; this.src='https://via.placeholder.com/600x400?text=Image+Not+Found+-+Check+GitHub+Repo';">`;
             document.getElementById('question-text').textContent = `What is label ${q.label} in Set ${q.set} pic?`;
             document.getElementById('answer-input').value = '';
             document.getElementById('answer-input').disabled = false;
@@ -497,19 +504,16 @@
             const q = questions[currentQuestionIndex];
             const userAnswer = document.getElementById('answer-input').value;
             const correctAnswer = q.answer;
+            
             const normalizedUser = normalizeAnswer(userAnswer);
-            // Allow for a flexible check: if the correct answer contains multiple parts (like in set 5),
-            // we should check against its normalized form.
             const normalizedCorrect = normalizeAnswer(correctAnswer); 
             
             const resultMessage = document.getElementById('result-message');
 
             if (normalizedUser === normalizedCorrect) {
-                // Check if the question has already been marked correct (only relevant for a multi-attempt mode, 
-                // but good practice to prevent score inflation if user hits submit multiple times)
                 if (!q.isCorrect) {
                     score++;
-                    q.isCorrect = true; // Mark question as correct
+                    q.isCorrect = true;
                 }
                 
                 resultMessage.className = 'correct';
@@ -518,7 +522,7 @@
             } else {
                 resultMessage.className = 'wrong';
                 resultMessage.innerHTML = `❌ Wrong. The correct answer is: <strong>${correctAnswer}</strong>.`;
-                q.isCorrect = false; // Mark question as incorrect
+                q.isCorrect = false;
             }
 
             // Lock the input and buttons after submission
@@ -537,26 +541,34 @@
         function endQuiz() {
             quizActive = false;
             document.getElementById('quiz-screen').style.display = 'none';
-            const finalMessage = document.createElement('div');
+            
+            let finalMessage = document.getElementById('final-message');
+            if (!finalMessage) {
+                finalMessage = document.createElement('div');
+                finalMessage.id = 'final-message';
+                document.getElementById('quiz-container').appendChild(finalMessage);
+            }
+
             finalMessage.innerHTML = `<h2>Quiz Finished!</h2>
                                       <p>You answered <strong>${score}</strong> out of ${questions.length} questions correctly.</p>
                                       <button class="start-button" onclick="window.location.reload()">Start Over</button>`;
-            document.getElementById('quiz-container').appendChild(finalMessage);
         }
 
         // Add event listener for 'Enter' key press on the input field
         document.addEventListener('DOMContentLoaded', () => {
             const answerInput = document.getElementById('answer-input');
             const nextButton = document.getElementById('next-button');
+            const submitButton = document.getElementById('submit-button');
 
             if (answerInput) {
                 answerInput.addEventListener('keypress', function(e) {
-                    if (e.key === 'Enter' && document.getElementById('submit-button').style.display !== 'none') {
+                    if (e.key === 'Enter') {
                         e.preventDefault();
-                        checkAnswer();
-                    } else if (e.key === 'Enter' && nextButton.style.display !== 'none') {
-                        e.preventDefault();
-                        nextQuestion();
+                        if (submitButton.style.display !== 'none') {
+                            checkAnswer();
+                        } else if (nextButton.style.display !== 'none') {
+                            nextQuestion();
+                        }
                     }
                 });
             }
