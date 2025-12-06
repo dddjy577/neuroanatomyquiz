@@ -1,700 +1,131 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Neuroanatomy Quiz by Oben</title>
-    <style>
-        /* CSS for Quiz Layout */
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-            background-color: #f4f4f9;
-            color: #333;
-        }
-        #quiz-container {
-            max-width: 800px;
-            margin: auto;
-            background: #fff;
-            padding: 20px 30px;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-        }
-        h1 {
-            color: #004d99;
-            text-align: center;
-            border-bottom: 2px solid #eee;
-            padding-bottom: 10px;
-        }
-        #stats {
-            display: flex;
-            justify-content: space-around;
-            margin-bottom: 20px;
-            padding: 10px;
-            background-color: #e6f0ff;
-            border-radius: 4px;
-        }
-        #stats div {
-            font-size: 1.1em;
-            font-weight: bold;
-        }
-        #controls {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-        .mode-button {
-            padding: 10px 20px;
-            margin: 5px;
-            font-size: 1em;
-            cursor: pointer;
-            border: none;
-            border-radius: 5px;
-            background-color: #007bff;
-            color: white;
-            transition: background-color 0.3s;
-        }
-        .mode-button:hover {
-            background-color: #0056b3;
-        }
-        #question-area {
-            border: 1px solid #ddd;
-            padding: 15px;
-            border-radius: 6px;
-            margin-top: 20px;
-        }
-        #image-container {
-            text-align: center;
-            margin-bottom: 15px;
-        }
-        #quiz-image {
-            max-width: 100%;
-            height: auto;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-        }
-        #question-text {
-            font-size: 1.2em;
-            font-weight: bold;
-            margin-bottom: 10px;
-        }
-        #answer-input {
-            width: 70%;
-            padding: 10px;
-            margin-right: 10px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-        }
-        #submit-button, #next-button {
-            padding: 10px 20px;
-            font-size: 1em;
-            cursor: pointer;
-            border: none;
-            border-radius: 5px;
-            background-color: #28a745;
-            color: white;
-            transition: background-color 0.3s;
-        }
-        #submit-button:hover, #next-button:hover {
-            background-color: #1e7e34;
-        }
-        #feedback {
-            margin-top: 15px;
-            padding: 10px;
-            border-radius: 4px;
-            font-weight: bold;
-            display: none;
-        }
-        .correct {
-            background-color: #d4edda;
-            color: #155724;
-        }
-        .incorrect {
-            background-color: #f8d7da;
-            color: #721c24;
-        }
-        #results-screen {
-            display: none;
-            text-align: center;
-            padding: 50px;
-            border: 2px dashed #004d99;
-            border-radius: 8px;
-            margin-top: 20px;
-        }
-        #results-screen h2 {
-            color: #004d99;
-        }
-        .end-quiz-button {
-            display: block;
-            width: 100%;
-            padding: 10px;
-            margin-top: 20px;
-            background-color: #dc3545;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 1em;
-        }
-        .end-quiz-button:hover {
-            background-color: #c82333;
-        }
-    </style>
-</head>
-<body>
-
-<div id="quiz-container">
-    <h1>🧠 Neuroanatomy Quiz by Oben</h1>
-
-    <div id="stats">
-        <div>Correct Answers: <span id="correct-count">0</span></div>
-        <div>Questions Answered: <span id="answered-count">0</span></div>
-    </div>
-
-    <div id="controls">
-        <p id="mode-select-text">Select Quiz Mode to Begin:</p>
-        <button class="mode-button" id="random-btn">Random Mode</button>
-        <button class="mode-button" id="order-btn">Order Mode</button>
-    </div>
-
-    <div id="question-area" style="display: none;">
-        <div id="image-container">
-            <img id="quiz-image" src="" alt="Anatomical Brain Diagram">
-        </div>
-        
-        <p id="question-text"></p>
-        
-        <form id="answer-form">
-            <input type="text" id="answer-input" placeholder="Type your answer here" required>
-            <button type="submit" id="submit-button">Submit</button>
-        </form>
-        
-        <div id="feedback" style="display: none;"></div>
-    </div>
-
-    <div id="results-screen">
-        <h2>Quiz Ended! Review Your Results</h2>
-        <p>You answered <span id="final-answered">0</span> questions.</p>
-        <p>Your final score is: <span id="final-score">0</span> / <span id="final-answered-total">0</span></p>
-        <button class="mode-button" onclick="location.reload()">Start New Quiz</button>
-    </div>
-
-    <button class="end-quiz-button" id="end-review-btn" style="display: none;">End Quiz and Review Results</button>
-
-</div>
-
-<script>
-    // Base URL for images uploaded to your GitHub Pages repository
+// Base URL for images uploaded to your GitHub Pages repository
     const BASE_IMAGE_URL = 'https://ddjj577.github.io/neuroanatomyquiz/'; 
 
     // ---------------------------------------------
-    // 1. QUIZ DATA (FINAL VERSION with CORRECT FILENAMES)
-    // NOTE: Filenames are corrected to use the format "set X pic.jpg" 
-    // and "set X pic.png" based on the uploaded file list.
+    // 1. QUIZ DATA (FINAL VERSION with CORRECT FILENAMES: mostly .jpeg, set 5 is .PNG)
     // ---------------------------------------------
     const allQuizData = {
         "Set_1_basal ganglia answers": [
-            { label: "1", structure: "caput nucleus caudatus", filename: "set 1 pic.jpg" },
-            { label: "2", structure: "cauda nucleus caudatus", filename: "set 1 pic.jpg" },
-            { label: "3", structure: "nucleus lentiformis", filename: "set 1 pic.jpg" },
-            { label: "4", structure: "thalamus sin.", filename: "set 1 pic.jpg" },
-            { label: "5", structure: "thalamus dx.", filename: "set 1 pic.jpg" },
-            { label: "6", structure: "ventriculus III", filename: "set 1 pic.jpg" }
+            { label: "1", structure: "caput nucleus caudatus", filename: "set 1 pic.jpeg" },
+            { label: "2", structure: "cauda nucleus caudatus", filename: "set 1 pic.jpeg" },
+            { label: "3", structure: "nucleus lentiformis", filename: "set 1 pic.jpeg" },
+            { label: "4", structure: "thalamus sin.", filename: "set 1 pic.jpeg" },
+            { label: "5", structure: "thalamus dx.", filename: "set 1 pic.jpeg" },
+            { label: "6", structure: "ventriculus III", filename: "set 1 pic.jpeg" }
         ],
         "Set_2_horizontal answers": [
-            { label: "1", structure: "ventr. lat. cornu ant.", filename: "set 2 pic.jpg" },
-            { label: "2", structure: "ventr. lat. cornu inf.", filename: "set 2 pic.jpg" },
-            { label: "3", structure: "septum pellucidum", filename: "set 2 pic.jpg" },
-            { label: "4", structure: "ventriculus III", filename: "set 2 pic.jpg" },
-            { label: "5", structure: "capsula interna", filename: "set 2 pic.jpg" },
-            { label: "6", structure: "thalamus", filename: "set 2 pic.jpg" },
-            { label: "7", structure: "corpus callosum", filename: "set 2 pic.jpg" },
-            { label: "8", structure: "fornix", filename: "set 2 pic.jpg" },
-            { label: "9", structure: "globus pallidus", filename: "set 2 pic.jpg" },
-            { label: "10", structure: "putamen", filename: "set 2 pic.jpg" },
-            { label: "11", structure: "claustrum", filename: "set 2 pic.jpg" },
-            { label: "12", structure: "insula", filename: "set 2 pic.jpg" },
-            { label: "13", structure: "caput nucleus caudatus", filename: "set 2 pic.jpg" },
-            { label: "14", structure: "cauda nucleus caudatus", filename: "set 2 pic.jpg" }
+            { label: "1", structure: "ventr. lat. cornu ant.", filename: "set 2 pic.jpeg" },
+            { label: "2", structure: "ventr. lat. cornu inf.", filename: "set 2 pic.jpeg" },
+            { label: "3", structure: "septum pellucidum", filename: "set 2 pic.jpeg" },
+            { label: "4", structure: "ventriculus III", filename: "set 2 pic.jpeg" },
+            { label: "5", structure: "capsula interna", filename: "set 2 pic.jpeg" },
+            { label: "6", structure: "thalamus", filename: "set 2 pic.jpeg" },
+            { label: "7", structure: "corpus callosum", filename: "set 2 pic.jpeg" },
+            { label: "8", structure: "fornix", filename: "set 2 pic.jpeg" },
+            { label: "9", structure: "globus pallidus", filename: "set 2 pic.jpeg" },
+            { label: "10", structure: "putamen", filename: "set 2 pic.jpeg" },
+            { label: "11", structure: "claustrum", filename: "set 2 pic.jpeg" },
+            { label: "12", structure: "insula", filename: "set 2 pic.jpeg" },
+            { label: "13", structure: "caput nucleus caudatus", filename: "set 2 pic.jpeg" },
+            { label: "14", structure: "cauda nucleus caudatus", filename: "set 2 pic.jpeg" }
         ],
         "Set_3_medial answers": [
-            { label: "1", structure: "corpus callosum", filename: "set 3 pic.jpg" },
-            { label: "2", structure: "septum pellucidum", filename: "set 3 pic.jpg" },
-            { label: "3", structure: "fornix", filename: "set 3 pic.jpg" },
-            { label: "4", structure: "commissura anterior", filename: "set 3 pic.jpg" },
-            { label: "5", structure: "commissura posterior", filename: "set 3 pic.jpg" },
-            { label: "6", structure: "plexus choroideus ventr. III", filename: "set 3 pic.jpg" },
-            { label: "7", structure: "hypothalamus", filename: "set 3 pic.jpg" },
-            { label: "8", structure: "thalamus", filename: "set 3 pic.jpg" },
-            { label: "9", structure: "corpus mammillare", filename: "set 3 pic.jpg" },
-            { label: "10", structure: "foramen interventriculare", filename: "set 3 pic.jpg" },
-            { label: "11", structure: "ventriculus IV", filename: "set 3 pic.jpg" },
-            { label: "12", structure: "plexus choroideus ventr. IV", filename: "set 3 pic.jpg" },
-            { label: "13", structure: "aqueductus cerebri", filename: "set 3 pic.jpg" },
-            { label: "14", structure: "corpus pineale", filename: "set 3 pic.jpg" },
-            { label: "15", structure: "mesencephalon", filename: "set 3 pic.jpg" },
-            { label: "16", structure: "pons", filename: "set 3 pic.jpg" }
+            { label: "1", structure: "corpus callosum", filename: "set 3 pic.jpeg" },
+            { label: "2", structure: "septum pellucidum", filename: "set 3 pic.jpeg" },
+            { label: "3", structure: "fornix", filename: "set 3 pic.jpeg" },
+            { label: "4", structure: "commissura anterior", filename: "set 3 pic.jpeg" },
+            { label: "5", structure: "commissura posterior", filename: "set 3 pic.jpeg" },
+            { label: "6", structure: "plexus choroideus ventr. III", filename: "set 3 pic.jpeg" },
+            { label: "7", structure: "hypothalamus", filename: "set 3 pic.jpeg" },
+            { label: "8", structure: "thalamus", filename: "set 3 pic.jpeg" },
+            { label: "9", structure: "corpus mammillare", filename: "set 3 pic.jpeg" },
+            { label: "10", structure: "foramen interventriculare", filename: "set 3 pic.jpeg" },
+            { label: "11", structure: "ventriculus IV", filename: "set 3 pic.jpeg" },
+            { label: "12", structure: "plexus choroideus ventr. IV", filename: "set 3 pic.jpeg" },
+            { label: "13", structure: "aqueductus cerebri", filename: "set 3 pic.jpeg" },
+            { label: "14", structure: "corpus pineale", filename: "set 3 pic.jpeg" },
+            { label: "15", structure: "mesencephalon", filename: "set 3 pic.jpeg" },
+            { label: "16", structure: "pons", filename: "set 3 pic.jpeg" }
         ],
         "Set_4_ventricules answers": [
-            { label: "1", structure: "ventr. lat. cornu posterius", filename: "set 4 pic.jpg" },
-            { label: "2", structure: "ventr. lat. pars centralis", filename: "set 4 pic.jpg" },
-            { label: "3", structure: "ventr. lat. cornu anterius", filename: "set 4 pic.jpg" },
-            { label: "4", structure: "aqueductus cerebri", filename: "set 4 pic.jpg" },
-            { label: "5", structure: "venr. lat. cornu laterale", filename: "set 4 pic.jpg" },
-            { label: "6", structure: "ventriculus IV", filename: "set 4 pic.jpg" },
-            { label: "7", structure: "canalis centralis", filename: "set 4 pic.jpg" },
-            { label: "8", structure: "aperturae lat. ventr. IV", filename: "set 4 pic.jpg" },
-            { label: "9", structure: "apertura med. ventr. IV", filename: "set 4 pic.jpg" },
-            { label: "10", structure: "ventriculus III", filename: "set 4 pic.jpg" },
-            { label: "11", structure: "foramen interventriculare", filename: "set 4 pic.jpg" },
-            { label: "12", structure: "adhesio intrathalamica", filename: "set 4 pic.jpg" }
+            { label: "1", structure: "ventr. lat. cornu posterius", filename: "set 4 pic.jpeg" },
+            { label: "2", structure: "ventr. lat. pars centralis", filename: "set 4 pic.jpeg" },
+            { label: "3", structure: "ventr. lat. cornu anterius", filename: "set 4 pic.jpeg" },
+            { label: "4", structure: "aqueductus cerebri", filename: "set 4 pic.jpeg" },
+            { label: "5", structure: "venr. lat. cornu laterale", filename: "set 4 pic.jpeg" },
+            { label: "6", structure: "ventriculus IV", filename: "set 4 pic.jpeg" },
+            { label: "7", structure: "canalis centralis", filename: "set 4 pic.jpeg" },
+            { label: "8", structure: "aperturae lat. ventr. IV", filename: "set 4 pic.jpeg" },
+            { label: "9", structure: "apertura med. ventr. IV", filename: "set 4 pic.jpeg" },
+            { label: "10", structure: "ventriculus III", filename: "set 4 pic.jpeg" },
+            { label: "11", structure: "foramen interventriculare", filename: "set 4 pic.jpeg" },
+            { label: "12", structure: "adhesio intrathalamica", filename: "set 4 pic.jpeg" }
         ],
         "Set_5_mesencephalon_coronal section answers": [
-            { label: "a", structure: "Medial geniculate nucleus", filename: "set 5 pic.png" }, // Using .png based on your list
-            { label: "b", structure: "Lateral geniculate nucleus", filename: "set 5 pic.png" },
-            { label: "c", structure: "Aqueductus cerebri", filename: "set 5 pic.png" },
-            { label: "d", structure: "Crus cerebri", filename: "set 5 pic.png" },
-            { label: "e", structure: "Substantia nigra", filename: "set 5 pic.png" },
-            { label: "f", structure: "Nucleus raphne", filename: "set 5 pic.png" },
-            { label: "g", structure: "Nucleus ruber", filename: "set 5 pic.png" },
-            { label: "h", structure: "Nervus Oculomotorius", filename: "set 5 pic.png" },
-            { label: "i", structure: "Colliculus superior", filename: "set 5 pic.png" },
-            { label: "j", structure: "Periaquaductal gray", filename: "set 5 pic.png" },
-            { label: "k", structure: "Basis pedunculi = crus cerebri, substantia nigra", filename: "set 5 pic.png" },
-            { label: "L*", structure: "Tectum = Superior colliculus, inferior colliculus", filename: "set 5 pic.png" },
-            { label: "M*", structure: "Tegmentum = Red nucleus, Periaqueductal gray, Reticular formation, Cranial nerve nuclei, ascending/descending pathways (except CST/CBT)", filename: "set 5 pic.png" },
-            { label: "N*", structure: "Pedunculus cerebri = tegmentum, basis pedunculi, pretectum", filename: "set 5 pic.png" }
+            { label: "a", structure: "Medial geniculate nucleus", filename: "set 5 pic.PNG" }, // Set 5 is .PNG
+            { label: "b", structure: "Lateral geniculate nucleus", filename: "set 5 pic.PNG" },
+            { label: "c", structure: "Aqueductus cerebri", filename: "set 5 pic.PNG" },
+            { label: "d", structure: "Crus cerebri", filename: "set 5 pic.PNG" },
+            { label: "e", structure: "Substantia nigra", filename: "set 5 pic.PNG" },
+            { label: "f", structure: "Nucleus raphne", filename: "set 5 pic.PNG" },
+            { label: "g", structure: "Nucleus ruber", filename: "set 5 pic.PNG" },
+            { label: "h", structure: "Nervus Oculomotorius", filename: "set 5 pic.PNG" },
+            { label: "i", structure: "Colliculus superior", filename: "set 5 pic.PNG" },
+            { label: "j", structure: "Periaquaductal gray", filename: "set 5 pic.PNG" },
+            { label: "k", structure: "Basis pedunculi = crus cerebri, substantia nigra", filename: "set 5 pic.PNG" },
+            { label: "L*", structure: "Tectum = Superior colliculus, inferior colliculus", filename: "set 5 pic.PNG" },
+            { label: "M*", structure: "Tegmentum = Red nucleus, Periaqueductal gray, Reticular formation, Cranial nerve nuclei, ascending/descending pathways (except CST/CBT)", filename: "set 5 pic.PNG" },
+            { label: "N*", structure: "Pedunculus cerebri = tegmentum, basis pedunculi, pretectum", filename: "set 5 pic.PNG" }
         ],
         "Set_6_medullaoblongata_answers": [
-            { label: "a", structure: "Dorsal motor nucleus of vagus", filename: "set 6 pic.jpg" },
-            { label: "b", structure: "CN V sensory nuclei", filename: "set 6 pic.jpg" },
-            { label: "c", structure: "Inferior olivary nucleus", filename: "set 6 pic.jpg" },
-            { label: "d", structure: "Corticospinal fibers in the pyramid", filename: "set 6 pic.jpg" },
-            { label: "e", structure: "Medial lemniscus", filename: "set 6 pic.jpg" },
-            { label: "f", structure: "Spinothalamic tract", filename: "set 6 pic.jpg" },
-            { label: "g", structure: "Inferior cerebellar peduncle", filename: "set 6 pic.jpg" },
-            { label: "h", structure: "Tectospinal tract", filename: "set 6 pic.jpg" },
-            { label: "i", structure: "Hypoglossal nuclei", filename: "set 6 pic.jpg" },
-            { label: "j", structure: "Medial longitudinal fasciculus", filename: "set 6 pic.jpg" }
+            { label: "a", structure: "Dorsal motor nucleus of vagus", filename: "set 6 pic.jpeg" },
+            { label: "b", structure: "CN V sensory nuclei", filename: "set 6 pic.jpeg" },
+            { label: "c", structure: "Inferior olivary nucleus", filename: "set 6 pic.jpeg" },
+            { label: "d", structure: "Corticospinal fibers in the pyramid", filename: "set 6 pic.jpeg" },
+            { label: "e", structure: "Medial lemniscus", filename: "set 6 pic.jpeg" },
+            { label: "f", structure: "Spinothalamic tract", filename: "set 6 pic.jpeg" },
+            { label: "g", structure: "Inferior cerebellar peduncle", filename: "set 6 pic.jpeg" },
+            { label: "h", structure: "Tectospinal tract", filename: "set 6 pic.jpeg" },
+            { label: "i", structure: "Hypoglossal nuclei", filename: "set 6 pic.jpeg" },
+            { label: "j", structure: "Medial longitudinal fasciculus", filename: "set 6 pic.jpeg" }
         ],
         "Set_7 answers": [
-            { label: "1", structure: "sulcus centralis", filename: "set 7 pic.jpg" },
-            { label: "2", structure: "sulcus lateralis", filename: "set 7 pic.jpg" },
-            { label: "3", structure: "sulcus parieto-occipitalis", filename: "set 7 pic.jpg" },
-            { label: "4", structure: "gyrus precentralis", filename: "set 7 pic.jpg" },
-            { label: "5", structure: "gyrus postcentralis", filename: "set 7 pic.jpg" },
-            { label: "6", structure: "gyrus temporalis superior", filename: "set 7 pic.jpg" },
-            { label: "7", structure: "gyrus temporalis media", filename: "set 7 pic.jpg" },
-            { label: "8", structure: "gyrus temporalis inferior", filename: "set 7 pic.jpg" }
+            { label: "1", structure: "sulcus centralis", filename: "set 7 pic.jpeg" },
+            { label: "2", structure: "sulcus lateralis", filename: "set 7 pic.jpeg" },
+            { label: "3", structure: "sulcus parieto-occipitalis", filename: "set 7 pic.jpeg" },
+            { label: "4", structure: "gyrus precentralis", filename: "set 7 pic.jpeg" },
+            { label: "5", structure: "gyrus postcentralis", filename: "set 7 pic.jpeg" },
+            { label: "6", structure: "gyrus temporalis superior", filename: "set 7 pic.jpeg" },
+            { label: "7", structure: "gyrus temporalis media", filename: "set 7 pic.jpeg" },
+            { label: "8", structure: "gyrus temporalis inferior", filename: "set 7 pic.jpeg" }
         ],
         "set 8 answers": [
-            { label: "1", structure: "fissura longitudinalis", filename: "set 8 pic.jpg" },
-            { label: "2", structure: "bulbus olfactorius", filename: "set 8 pic.jpg" },
-            { label: "3", structure: "tractus olfactorius", filename: "set 8 pic.jpg" },
-            { label: "4", structure: "chiasma opticum", filename: "set 8 pic.jpg" },
-            { label: "5", structure: "infundibulum", filename: "set 8 pic.jpg" },
-            { label: "6", structure: "corpus mamillare", filename: "set 8 pic.jpg" },
-            { label: "7", structure: "pons", filename: "set 8 pic.jpg" },
-            { label: "8", structure: "pyramis", filename: "set 8 pic.jpg" },
-            { label: "9", structure: "flocculus", filename: "set 8 pic.jpg" },
-            { label: "10", structure: "vermis cerebelli", filename: "set 8 pic.jpg" },
-            { label: "11", structure: "oliva", filename: "set 8 pic.jpg" },
-            { label: "12", structure: "gyrus temporalis inferior", filename: "set 8 pic.jpg" },
-            { label: "13", structure: "gyrus parahippocampalis", filename: "set 8 pic.jpg" },
-            { label: "14", structure: "gyri orbitales", filename: "set 8 pic.jpg" },
-            { label: "15", structure: "sulci orbitales", filename: "set 8 pic.jpg" }
+            { label: "1", structure: "fissura longitudinalis", filename: "set 8 pic.jpeg" },
+            { label: "2", structure: "bulbus olfactorius", filename: "set 8 pic.jpeg" },
+            { label: "3", structure: "tractus olfactorius", filename: "set 8 pic.jpeg" },
+            { label: "4", structure: "chiasma opticum", filename: "set 8 pic.jpeg" },
+            { label: "5", structure: "infundibulum", filename: "set 8 pic.jpeg" },
+            { label: "6", structure: "corpus mamillare", filename: "set 8 pic.jpeg" },
+            { label: "7", structure: "pons", filename: "set 8 pic.jpeg" },
+            { label: "8", structure: "pyramis", filename: "set 8 pic.jpeg" },
+            { label: "9", structure: "flocculus", filename: "set 8 pic.jpeg" },
+            { label: "10", structure: "vermis cerebelli", filename: "set 8 pic.jpeg" },
+            { label: "11", structure: "oliva", filename: "set 8 pic.jpeg" },
+            { label: "12", structure: "gyrus temporalis inferior", filename: "set 8 pic.jpeg" },
+            { label: "13", structure: "gyrus parahippocampalis", filename: "set 8 pic.jpeg" },
+            { label: "14", structure: "gyri orbitales", filename: "set 8 pic.jpeg" },
+            { label: "15", structure: "sulci orbitales", filename: "set 8 pic.jpeg" }
         ],
         "set 9 answers": [
-            { label: "1", structure: "gyrus cinguli", filename: "set 9 pic.jpg" },
-            { label: "2", structure: "corpus callosum", filename: "set 9 pic.jpg" },
-            { label: "3", structure: "sulcus calcarinus", filename: "set 9 pic.jpg" },
-            { label: "4", structure: "commissura anterior", filename: "set 9 pic.jpg" },
-            { label: "5", structure: "fornix", filename: "set 9 pic.jpg" },
-            { label: "6", structure: "corpus pineale (epiphysis)", filename: "set 9 pic.jpg" },
-            { label: "7", structure: "Telencephalon", filename: "set 9 pic.jpg" },
-            { label: "8", structure: "Diencephalon", filename: "set 9 pic.jpg" },
-            { label: "9", structure: "Mesencephalon", filename: "set 9 pic.jpg" },
-            { label: "10", structure: "Pons", filename: "set 9 pic.jpg" },
-            { label: "11", structure: "Medulla oblongata", filename: "set 9 pic.jpg" },
-            { label: "12", structure: "Medulla spinalis", filename: "set 9 pic.jpg" },
-            { label: "13", structure: "Cerebellum", filename: "set 9 pic.jpg" }
-        ],
-        "set 10 answers": [
-            { label: "1", structure: "fissura longitudinalis cerebri", filename: "set 10 pic.jpg" },
-            { label: "2", structure: "corpus callosum", filename: "set 10 pic.jpg" },
-            { label: "3", structure: "septum pellucidum", filename: "set 10 pic.jpg" },
-            { label: "4", structure: "fornix", filename: "set 10 pic.jpg" },
-            { label: "5", structure: "sulcus lateralis", filename: "set 10 pic.jpg" },
-            { label: "6", structure: "insula", filename: "set 10 pic.jpg" },
-            { label: "7", structure: "corpus mammillare", filename: "set 10 pic.jpg" },
-            { label: "8", structure: "ventr. lat. pars centralis", filename: "set 10 pic.jpg" },
-            { label: "9", structure: "ventr. lat. cornu inferius (laterale)", filename: "set 10 pic.jpg" },
-            { label: "10", structure: "ventriculus III", filename: "set 10 pic.jpg" },
-            { label: "11", structure: "plexus choroideus ventr. lat.", filename: "set 10 pic.jpg" },
-            { label: "12", structure: "plexus choroideus ventr. III", filename: "set 10 pic.jpg" },
-            { label: "13", structure: "thalamus", filename: "set 10 pic.jpg" },
-            { label: "14", structure: "hypothalamus", filename: "set 10 pic.jpg" },
-            { label: "15", structure: "nucleus caudatus", filename: "set 10 pic.jpg" },
-            { label: "16", structure: "claustrum", filename: "set 10 pic.jpg" },
-            { label: "17", structure: "putamen", filename: "set 10 pic.jpg" },
-            { label: "18", structure: "globus pallidus", filename: "set 10 pic.jpg" },
-            { label: "19", structure: "capsula interna", filename: "set 10 pic.jpg" },
-            { label: "20", structure: "lobus temporalis", filename: "set 10 pic.jpg" },
-            { label: "21", structure: "pedunculus cerebri", filename: "set 10 pic.jpg" }
-        ],
-        "set 11 answers": [
-            { label: "1", structure: "pedunculus cerebelli inf", filename: "set 11 pic.jpg" },
-            { label: "2", structure: "aperturae laterales ventr. IV", filename: "set 11 pic.jpg" },
-            { label: "3", structure: "pedunculus cerebelli media", filename: "set 11 pic.jpg" },
-            { label: "4", structure: "pedunculus cerebelli sup", filename: "set 11 pic.jpg" },
-            { label: "5", structure: "nervus trochlearis (n. IV)", filename: "set 11 pic.jpg" },
-            { label: "6", structure: "colliculus inferior", filename: "set 11 pic.jpg" },
-            { label: "7", structure: "colliculus superior", filename: "set 11 pic.jpg" },
-            { label: "8", structure: "corpus geniculatum laterale", filename: "set 11 pic.jpg" },
-            { label: "9", structure: "corpus geniculatum mediale", filename: "set 11 pic.jpg" },
-            { label: "10", structure: "thalamus", filename: "set 11 pic.jpg" },
-            { label: "11", structure: "corpus pineale", filename: "set 11 pic.jpg" },
-            { label: "12", structure: "ventriculus III", filename: "set 11 pic.jpg" },
-            { label: "13", structure: "tuberculum cuneatus", filename: "set 11 pic.jpg" },
-            { label: "14", structure: "tuberculum gracilis", filename: "set 11 pic.jpg" },
-            { label: "15", structure: "fasciculus gracilis", filename: "set 11 pic.jpg" },
-            { label: "16", structure: "fasciculus cuneatus", filename: "set 11 pic.jpg" }
-        ],
-        "set 12 answers": [
-            { label: "1", structure: "Vermis", filename: "set 12 pic.jpg" },
-            { label: "2", structure: "tonsilla cerebelli", filename: "set 12 pic.jpg" },
-            { label: "3", structure: "lobus flocculo-nodularis", filename: "set 12 pic.jpg" },
-            { label: "4", structure: "pedunculus cerebelli superior", filename: "set 12 pic.jpg" },
-            { label: "5", structure: "pedunculus cerebelli media", filename: "set 12 pic.jpg" },
-            { label: "6", structure: "pedunculus cerebelli inferioir", filename: "set 12 pic.jpg" }
-        ],
-        "set 13 answers": [
-            { label: "1", structure: "n. oculomotorius (III)", filename: "set 13 pic.jpg" },
-            { label: "2", structure: "n. trochlearis (IV)", filename: "set 13 pic.jpg" },
-            { label: "3", structure: "n. trigeminus (V)", filename: "set 13 pic.jpg" },
-            { label: "4", structure: "n. abducens (VI)", filename: "set 13 pic.jpg" },
-            { label: "5", structure: "n. facialis (VII)", filename: "set 13 pic.jpg" },
-            { label: "6", structure: "n. vestibulo-cochlearis (VIII)", filename: "set 13 pic.jpg" },
-            { label: "7", structure: "n. glossopharyngeus (IX)", filename: "set 13 pic.jpg" },
-            { label: "8", structure: "n. vagus (X)", filename: "set 13 pic.jpg" },
-            { label: "9", structure: "n. accessorius (XI)", filename: "set 13 pic.jpg" },
-            { label: "10", structure: "n. hypoglossus (XII)", filename: "set 13 pic.jpg" },
-            { label: "11", structure: "pedunculus cerebri", filename: "set 13 pic.jpg" },
-            { label: "12", structure: "fossa interpeduncularis", filename: "set 13 pic.jpg" },
-            { label: "13", structure: "pyramis", filename: "set 13 pic.jpg" },
-            { label: "14", structure: "oliva", filename: "set 13 pic.jpg" },
-            { label: "15", structure: "infundibulum (hypophysis)", filename: "set 13 pic.jpg" },
-            { label: "16", structure: "pons", filename: "set 13 pic.jpg" },
-            { label: "17", structure: "corpus mammillare", filename: "set 13 pic.jpg" },
-            { label: "18", structure: "floccus", filename: "set 13 pic.jpg" }
-        ],
-        "set 14 answers": [
-            { label: "1", structure: "nucleus dentatus", filename: "set 14 pic.jpg" },
-            { label: "2", structure: "nucleus fastigii", filename: "set 14 pic.jpg" },
-            { label: "3", structure: "nucleus interpositus", filename: "set 14 pic.jpg" },
-            { label: "4", structure: "ventriculus IV", filename: "set 14 pic.jpg" },
-            { label: "5", structure: "pons", filename: "set 14 pic.jpg" },
-            { label: "6", structure: "flocculus", filename: "set 14 pic.jpg" }
-        ],
-        "set 15 answers": [
-            { label: "1", structure: "gyrus postcentralis", filename: "set 15 pic.jpg" },
-            { label: "2", structure: "gyrus precentralis", filename: "set 15 pic.jpg" },
-            { label: "3", structure: "sulcus centralis", filename: "set 15 pic.jpg" },
-            { label: "4", structure: "corona radiata", filename: "set 15 pic.jpg" },
-            { label: "5", structure: "capsula interna", filename: "set 15 pic.jpg" }
-        ],
-        "set 16 answers": [
-            { label: "1", structure: "fasciculus gracilis", filename: "set 16 pic.jpg" },
-            { label: "2", structure: "fasciculus cuneatus", filename: "set 16 pic.jpg" },
-            { label: "3", structure: "funiculus posterior", filename: "set 16 pic.jpg" },
-            { label: "4", structure: "funiculus lateralis", filename: "set 16 pic.jpg" },
-            { label: "5", structure: "funiculus anterior", filename: "set 16 pic.jpg" },
-            { label: "6", structure: "commissura anterior", filename: "set 16 pic.jpg" },
-            { label: "7", structure: "fissura mediana anterior", filename: "set 16 pic.jpg" },
-            { label: "8", structure: "cornu posterius", filename: "set 16 pic.jpg" },
-            { label: "9", structure: "cornu anterius", filename: "set 16 pic.jpg" },
-            { label: "10", structure: "cornu laterale", filename: "set 16 pic.jpg" },
-            { label: "11", structure: "canalis centralis", filename: "set 16 pic.jpg" }
-        ],
-        "set 17 answers": [
-            { label: "1", structure: "ÖVRE a. cerebri media", filename: "set 17 pic.jpg" },
-            { label: "2", structure: "UNDRE a. cerebri media", filename: "set 17 pic.jpg" },
-            { label: "3", structure: "ÖVRE a. cerebri ant.", filename: "set 17 pic.jpg" },
-            { label: "4", structure: "UNDRE a. cerebri ant.", filename: "set 17 pic.jpg" },
-            { label: "5", structure: "ÖVRE a cerebri post", filename: "set 17 pic.jpg" },
-            { label: "6", structure: "UNDRE a cerebri post", filename: "set 17 pic.jpg" },
-            { label: "7", structure: "ÖVRE a cerebelli sup", filename: "set 17 pic.jpg" },
-            { label: "8", structure: "UNDRE a cerebelli sup", filename: "set 17 pic.jpg" },
-            { label: "9", structure: "ÖVRE a cerebelli inferior ant. (AICA)", filename: "set 17 pic.jpg" },
-            { label: "10", structure: "UNDRE a cerebelli inferior post. (PICA)", filename: "set 17 pic.jpg" },
-            { label: "11", structure: "ÖVRE a cerebelli inferior post. (PICA)", filename: "set 17 pic.jpg" },
-            { label: "12", structure: "ÖVRE a basilaris", filename: "set 17 pic.jpg" },
-            { label: "13", structure: "UNDRE a basilaris", filename: "set 17 pic.jpg" }
-        ],
-        "set 18 answers": [
-            { label: "1", structure: "a communicants ant.", filename: "set 18 pic.jpg" },
-            { label: "2", structure: "a cerebri ant.", filename: "set 18 pic.jpg" },
-            { label: "3", structure: "a carotis interna", filename: "set 18 pic.jpg" },
-            { label: "4", structure: "a basilaris", filename: "set 18 pic.jpg" },
-            { label: "5", structure: "a spinalis ant.", filename: "set 18 pic.jpg" },
-            { label: "6", structure: "a communicants post.", filename: "set 18 pic.jpg" },
-            { label: "7", structure: "a cerebri post.", filename: "set 18 pic.jpg" },
-            { label: "8", structure: "a cerebri media", filename: "set 18 pic.jpg" },
-            { label: "9", structure: "a vertebralis", filename: "set 18 pic.jpg" },
-            { label: "10", structure: "n. opticus (n. II)", filename: "set 18 pic.jpg" },
-            { label: "11", structure: "hypophysis", filename: "set 18 pic.jpg" },
-            { label: "12", structure: "n. oculomotorius (n. III)", filename: "set 18 pic.jpg" },
-            { label: "13", structure: "n. trigeminus (n. V)", filename: "set 18 pic.jpg" },
-            { label: "14", structure: "n. abducens (n. VI)", filename: "set 18 pic.jpg" },
-            { label: "15", structure: "n. hypoglossus (n. XII)", filename: "set 18 pic.jpg" }
-        ],
-        "set 19 answers": [
-            { label: "1", structure: "a. cerebri anterior", filename: "set 19 pic.jpg" },
-            { label: "2", structure: "a. carotis interna", filename: "set 19 pic.jpg" },
-            { label: "3", structure: "a. cerebelli superior", filename: "set 19 pic.jpg" },
-            { label: "4", structure: "a. basilaris", filename: "set 19 pic.jpg" },
-            { label: "5", structure: "a. cerebelli inferior anterior (AICA)", filename: "set 19 pic.jpg" },
-            { label: "6", structure: "a. vertebralis", filename: "set 19 pic.jpg" },
-            { label: "7", structure: "a. cerebelli inferior posterior (PICA)", filename: "set 19 pic.jpg" }
-        ],
-        "set 20 answers": [
-            { label: "1", structure: "dura mater spinalis", filename: "set 20 pic.jpg" },
-            { label: "2", structure: "arachnoidea spinalis", filename: "set 20 pic.jpg" },
-            { label: "3", structure: "pia mater spinalis", filename: "set 20 pic.jpg" },
-            { label: "4", structure: "ligamentum denticulatum", filename: "set 20 pic.jpg" },
-            { label: "5", structure: "spatium subarachnoidale", filename: "set 20 pic.jpg" },
-            { label: "6", structure: "a. spinalis anterior", filename: "set 20 pic.jpg" },
-            { label: "7", structure: "a. spinalis posterior", filename: "set 20 pic.jpg" },
-            { label: "8", structure: "spatium subdurale", filename: "set 20 pic.jpg" },
-            { label: "9", structure: "radix anterior", filename: "set 20 pic.jpg" },
-            { label: "10", structure: "radix posterior", filename: "set 20 pic.jpg" }
-        ],
-        "set 21 answers": [
-            { label: "1", structure: "sinus sagittalis superior", filename: "set 21 pic.jpg" },
-            { label: "2", structure: "sinus sagittalis inferior", filename: "set 21 pic.jpg" },
-            { label: "3", structure: "HÖGER sinus rectus", filename: "set 21 pic.jpg" },
-            { label: "4", structure: "VÄNSTER sinus rektus", filename: "set 21 pic.jpg" },
-            { label: "5", structure: "HÖGER confluens sinuum", filename: "set 21 pic.jpg" },
-            { label: "6", structure: "VÄNSTER confluens sinuum", filename: "set 21 pic.jpg" },
-            { label: "7", structure: "sinus sphenoparietalis", filename: "set 21 pic.jpg" },
-            { label: "8", structure: "HÖGER sinus transversus", filename: "set 21 pic.jpg" },
-            { label: "9", structure: "VÄNSTER sinus transversus", filename: "set 21 pic.jpg" },
-            { label: "10", structure: "VÄNSTER sinus sigmoideus", filename: "set 21 pic.jpg" },
-            { label: "11", structure: "HÖGER sinus sigmoideus", filename: "set 21 pic.jpg" },
-            { label: "12", structure: "sinus cavernosus", filename: "set 21 pic.jpg" },
-            { label: "13", structure: "sinus petrosus superior", filename: "set 21 pic.jpg" },
-            { label: "14", structure: "foramen jugulare", filename: "set 21 pic.jpg" },
-            { label: "15", structure: "HÖGER vena cerebrimagna", filename: "set 21 pic.jpg" },
-            { label: "16", structure: "VÄNSTER vena cerebrimagna", filename: "set 21 pic.jpg" }
-        ],
-        "set 22 answers": [
-            { label: "1", structure: "cisterna cerebellomedullaris", filename: "set 22 pic.jpg" },
-            { label: "2", structure: "cisterna pontis", filename: "set 22 pic.jpg" },
-            { label: "3", structure: "cisterna interpeduncularis", filename: "set 22 pic.jpg" },
-            { label: "4", structure: "cisterna superior", filename: "set 22 pic.jpg" },
-            { label: "5", structure: "cisterna chiasmatis", filename: "set 22 pic.jpg" },
-            { label: "6", structure: "ryggmärgens subarachnoidalrum", filename: "set 22 pic.jpg" },
-            { label: "7", structure: "corpus callosum", filename: "set 22 pic.jpg" },
-            { label: "8", structure: "fornix", filename: "set 22 pic.jpg" },
-            { label: "9", structure: "thalamus", filename: "set 22 pic.jpg" },
-            { label: "10", structure: "mesencephalon", filename: "set 22 pic.jpg" },
-            { label: "11", structure: "aqueductus cerebri", filename: "set 22 pic.jpg" },
-            { label: "12", structure: "pons", filename: "set 22 pic.jpg" },
-            { label: "13", structure: "medulla oblongata", filename: "set 22 pic.jpg" },
-            { label: "14", structure: "fjärde ventrikeln", filename: "set 22 pic.jpg" }
-        ]
-        // Sets 1-7 are replaced by the sets above to match your file naming scheme.
-        // If you had other files with the old complex names (like Set_1_basal ganglia pic.jpg), 
-        // they must be renamed to match "set X pic.jpg" on GitHub.
-    };
-
-    // ---------------------------------------------
-    // 2. QUIZ STATE VARIABLES
-    // ---------------------------------------------
-
-    let correctCount = 0;
-    let answeredCount = 0;
-    let quizMode = null; // 'random' or 'order'
-    let allQuestions = [];
-    let currentQuestionIndex = 0;
-    let currentQuestion = null;
-
-    // ---------------------------------------------
-    // 3. INITIALIZATION AND UI ELEMENTS
-    // ---------------------------------------------
-
-    const correctCountEl = document.getElementById('correct-count');
-    const answeredCountEl = document.getElementById('answered-count');
-    const questionArea = document.getElementById('question-area');
-    const quizImageEl = document.getElementById('quiz-image');
-    const questionTextEl = document.getElementById('question-text');
-    const answerForm = document.getElementById('answer-form');
-    const answerInput = document.getElementById('answer-input');
-    const feedbackEl = document.getElementById('feedback');
-    const controlsEl = document.getElementById('controls');
-    const endReviewBtn = document.getElementById('end-review-btn');
-    const resultsScreen = document.getElementById('results-screen');
-
-    // ---------------------------------------------
-    // 4. CORE QUIZ LOGIC FUNCTIONS
-    // ---------------------------------------------
-
-    function initializeQuestions(mode) {
-        // Flatten all data into a single array of question objects
-        allQuestions = [];
-        for (const [setName, questions] of Object.entries(allQuizData)) {
-            questions.forEach(q => {
-                allQuestions.push({
-                    setName: setName,
-                    label: q.label,
-                    structure: q.structure,
-                    // Prepend the base URL to the filename here
-                    imageUrl: BASE_IMAGE_URL + q.filename 
-                });
-            });
-        }
-        
-        // Handle sorting for Order mode or shuffling for Random mode
-        if (mode === 'random') {
-            allQuestions.sort(() => Math.random() - 0.5); // Shuffle array
-        } else if (mode === 'order') {
-            // Sort by Set Name first, then by Label within the set
-            allQuestions.sort((a, b) => {
-                if (a.setName !== b.setName) {
-                    return a.setName.localeCompare(b.setName);
-                }
-                // Custom sort for labels (numbers before letters, handling * or other characters)
-                const labelA = a.label.replace('*', '');
-                const labelB = b.label.replace('*', '');
-
-                const isNumericA = !isNaN(labelA) && isFinite(labelA);
-                const isNumericB = !isNaN(labelB) && isFinite(labelB);
-
-                if (isNumericA && isNumericB) {
-                    return parseInt(labelA) - parseInt(labelB);
-                } else if (isNumericA) {
-                    return -1; // Number comes before letter
-                } else if (isNumericB) {
-                    return 1; // Number comes before letter
-                }
-                return labelA.localeCompare(labelB); // Letter comparison
-            });
-        }
-    }
-
-    function startQuiz(mode) {
-        quizMode = mode;
-        initializeQuestions(mode);
-        controlsEl.style.display = 'none';
-        questionArea.style.display = 'block';
-        endReviewBtn.style.display = 'block';
-        currentQuestionIndex = 0;
-        answeredCount = 0;
-        correctCount = 0;
-        updateStats();
-        loadQuestion();
-    }
-
-    function loadQuestion() {
-        if (currentQuestionIndex >= allQuestions.length) {
-            endQuiz();
-            return;
-        }
-
-        currentQuestion = allQuestions[currentQuestionIndex];
-
-        // Use the full URL for the image source
-        quizImageEl.src = currentQuestion.imageUrl;
-        quizImageEl.alt = `Anatomical diagram for ${currentQuestion.setName.replace(' answers', '')}`;
-        
-        questionTextEl.textContent = `Question ${answeredCount + 1}: What is the structure labeled as ${currentQuestion.label} in ${currentQuestion.setName.replace(' answers', '')}?`;
-        
-        answerInput.value = '';
-        answerInput.disabled = false;
-        answerForm.querySelector('#submit-button').style.display = 'inline-block';
-        
-        // Remove 'Next' button if it exists
-        let nextButton = document.getElementById('next-button');
-        if (nextButton) nextButton.remove();
-
-        // Hide previous feedback
-        feedbackEl.style.display = 'none';
-        feedbackEl.className = '';
-        
-        answerInput.focus();
-    }
-
-    function checkAnswer(event) {
-        event.preventDefault();
-        
-        if (!currentQuestion || answerInput.disabled) return;
-
-        const userAnswer = answerInput.value.trim();
-        const correctAnswer = currentQuestion.structure.trim();
-
-        // Normalize answers for checking (remove multiple spaces, set to lowercase)
-        const normalizedUser = userAnswer.toLowerCase().replace(/\s+/g, ' ');
-        const normalizedCorrect = correctAnswer.toLowerCase().replace(/\s+/g, ' ');
-
-        answeredCount++;
-        
-        if (normalizedUser === normalizedCorrect) {
-            correctCount++;
-            feedbackEl.className = 'correct';
-            feedbackEl.textContent = '✅ Correct Answer!';
-        } else {
-            feedbackEl.className = 'incorrect';
-            feedbackEl.innerHTML = `❌ Wrong Answer. The correct answer is: <strong>${correctAnswer}</strong>`;
-        }
-
-        updateStats();
-        feedbackEl.style.display = 'block';
-        answerInput.disabled = true;
-        answerForm.querySelector('#submit-button').style.display = 'none';
-
-        // Add a "Next Question" button dynamically 
-        let nextButton = document.createElement('button');
-        nextButton.id = 'next-button';
-        nextButton.type = 'button'; // Prevent form submission
-        nextButton.textContent = currentQuestionIndex + 1 < allQuestions.length ? 'Next Question' : 'Finish Quiz';
-        nextButton.addEventListener('click', nextQuestion);
-        answerForm.appendChild(nextButton);
-        nextButton.focus();
-    }
-
-    function nextQuestion() {
-        if (currentQuestionIndex + 1 >= allQuestions.length) {
-            endQuiz();
-        } else {
-            currentQuestionIndex++;
-            loadQuestion();
-        }
-    }
-
-    function updateStats() {
-        correctCountEl.textContent = correctCount;
-        answeredCountEl.textContent = answeredCount;
-    }
-
-    function endQuiz() {
-        questionArea.style.display = 'none';
-        endReviewBtn.style.display = 'none';
-        resultsScreen.style.display = 'block';
-
-        document.getElementById('final-answered').textContent = answeredCount;
-        document.getElementById('final-answered-total').textContent = allQuestions.length;
-        document.getElementById('final-score').textContent = correctCount;
-    }
-
-    // ---------------------------------------------
-    // 5. EVENT LISTENERS
-    // ---------------------------------------------
-
-    document.getElementById('random-btn').addEventListener('click', () => startQuiz('random'));
-    document.getElementById('order-btn').addEventListener('click', () => startQuiz('order'));
-    answerForm.addEventListener('submit', checkAnswer);
-    endReviewBtn.addEventListener('click', endQuiz);
-    
-</script>
-
-</body>
-</html>
+            { label: "1", structure: "gyrus cinguli", filename: "set 9 pic.jpeg" },
+            { label: "2", structure: "corpus callosum", filename: "set 9 pic.jpeg" },
+            { label: "3", structure: "sulcus calcarinus", filename: "set 9 pic.jpeg" },
+            { label: "4", structure: "commissura anterior", filename: "set 9 pic.jpeg" },
+            { label: "5", structure: "fornix", filename: "set 9 pic.jpeg" },
+            { label: "6", structure: "corpus pineale (epiphysis)", filename: "set 9 pic.jpeg" },
+            { label: "7", structure: "Telencephalon", filename: "set 9 pic.jpeg" },
+            { label: "8", structure: "Diencephalon", filename: "set 9 pic.jpeg" },
+            { label: "9", structure: "Mesencephalon", filename: "set 9 pic.jpeg" },
+            { label: "10", structure: "Pons", filename: "set 9 pic.jpeg" },
+            { label: "11", structure: "Medulla oblongata", filename: "set 9 pic.jpeg" },
+            { label: "12", structure: "Med
