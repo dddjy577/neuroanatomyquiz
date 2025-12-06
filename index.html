@@ -5,14 +5,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Neuroanatomy Quiz by Oben</title>
     <style>
+        /* --- COLOR VARIABLES (UPDATED FOR DARK MODE) --- */
         :root {
-            --primary-color: #007bff;
-            --secondary-color: #6c757d;
-            --success-color: #28a745;
-            --danger-color: #dc3545;
-            --bg-color: #f8f9fa;
-            --card-bg: #ffffff;
-            --border-color: #dee2e6;
+            --primary-color: #b000b2; /* Main button color */
+            --primary-hover: #8e0090; /* Darker shade for hover */
+            --secondary-color: #b000b2; /* Next button color */
+            --secondary-hover: #8e0090; /* Darker shade for hover */
+            --success-color: #b000b2; /* Submit button (used for Correct feedback too) */
+            --success-hover: #8e0090; /* Darker shade for hover */
+            --danger-color: #dc3545; /* Red for Wrong feedback */
+            --bg-color: #000000; /* TOTALLY BLACK BACKGROUND */
+            --card-bg: #111111; /* Dark gray for the main container */
+            --border-color: #333333; /* Darker border color */
+            --text-color: #ffffff; /* WHITE TEXT */
+            --info-bar-bg: #222222; /* Darker background for the info bar */
         }
 
         body {
@@ -20,7 +26,7 @@
             margin: 0;
             padding: 20px;
             background-color: var(--bg-color);
-            color: #343a40;
+            color: var(--text-color); /* Apply white text color */
             text-align: center;
         }
 
@@ -29,7 +35,7 @@
             margin: 0 auto;
             background-color: var(--card-bg);
             border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5); /* Darker shadow for contrast */
             padding: 30px;
         }
 
@@ -39,6 +45,10 @@
             padding-bottom: 10px;
             margin-bottom: 20px;
         }
+        
+        h2 {
+            color: var(--text-color);
+        }
 
         #info-bar {
             display: flex;
@@ -47,7 +57,7 @@
             font-weight: bold;
             font-size: 1.1em;
             padding: 10px;
-            background-color: #e9ecef;
+            background-color: var(--info-bar-bg);
             border-radius: 4px;
         }
 
@@ -60,17 +70,17 @@
             transition: background-color 0.3s ease;
             font-size: 1em;
             font-weight: 600;
+            color: var(--text-color); /* White text on all buttons */
         }
 
         .start-button {
             background-color: var(--primary-color);
-            color: white;
             width: 150px;
             height: 50px;
         }
 
         .start-button:hover {
-            background-color: #0056b3;
+            background-color: var(--primary-hover);
         }
 
         #image-display img {
@@ -84,6 +94,21 @@
         #question-area {
             margin-bottom: 20px;
         }
+        
+        /* Style for the new End Quiz button */
+        #end-button {
+            background-color: #8e0090; /* A darker shade of the theme color to look distinct */
+            margin-top: 15px; 
+            width: 100%;
+            max-width: 480px;
+            display: block; /* Make it take its own row */
+            margin-left: auto;
+            margin-right: auto;
+        }
+        #end-button:hover {
+            background-color: #5d005e;
+        }
+
 
         #answer-input {
             padding: 10px;
@@ -92,22 +117,22 @@
             width: 80%;
             max-width: 300px;
             margin-right: 10px;
+            background-color: var(--info-bar-bg); /* Darker input background */
+            color: var(--text-color);
         }
 
         #submit-button {
             background-color: var(--success-color);
-            color: white;
         }
         #submit-button:hover {
-            background-color: #1e7e34;
+            background-color: var(--success-hover);
         }
 
         #next-button {
             background-color: var(--secondary-color);
-            color: white;
         }
         #next-button:hover {
-            background-color: #5a6268;
+            background-color: var(--secondary-hover);
         }
 
         #result-message {
@@ -115,15 +140,16 @@
             padding: 10px;
             border-radius: 4px;
             font-weight: bold;
-            min-height: 40px; /* To prevent layout shift */
+            min-height: 40px;
         }
+        /* Adjusted feedback colors for better visibility on a dark background */
         .correct {
-            background-color: #d4edda;
-            color: var(--success-color);
+            background-color: #004d00; /* Dark Green */
+            color: #7aff7a; /* Light Green text */
         }
         .wrong {
-            background-color: #f8d7da;
-            color: var(--danger-color);
+            background-color: #6d0000; /* Dark Red */
+            color: #ff7a7a; /* Light Red text */
         }
     </style>
 </head>
@@ -152,6 +178,7 @@
                 <input type="text" id="answer-input" placeholder="Enter your answer">
                 <button id="submit-button" onclick="checkAnswer()">Submit</button>
                 <button id="next-button" style="display:none;" onclick="nextQuestion()">Next Question</button>
+                <button id="end-button" onclick="endQuizEarly()">End Quiz</button>
             </div>
 
             <div id="result-message">
@@ -431,17 +458,16 @@
         ];
 
         // --- Global State Variables ---
-        let questions = []; // Correctly initialized as empty array
+        let questions = []; 
         let currentQuestionIndex = 0;
         let score = 0;
         let quizActive = false;
         
-        // Image link setup (corrected using Raw GitHub Content)
+        // Image link setup (Corrected Raw GitHub Content)
         const IMAGE_BASE_URL = 'https://raw.githubusercontent.com/dddjy577/neuroanatomyquiz/main/'; 
 
         // --- Utility Functions ---
 
-        // Helper to format text for case-insensitive and whitespace-tolerant comparison
         function normalizeAnswer(text) {
             return text.toLowerCase().trim().replace(/[\.,\(\)\-\*]/g, '').replace(/\s+/g, ' ');
         }
@@ -456,35 +482,31 @@
         // --- Core Quiz Logic ---
 
         function startQuiz(mode) {
-            // 1. Initialize questions array
             questions = [...QUIZ_DATA]; 
 
             if (mode === 'random') {
                 shuffle(questions);
             }
 
-            // 2. Reset state
             currentQuestionIndex = 0;
             score = 0;
             quizActive = true;
 
-            // 3. Switch screens (This must happen successfully)
             document.getElementById('start-screen').style.display = 'none';
             document.getElementById('quiz-screen').style.display = 'block';
 
-            // 4. Load the first question
             loadQuestion();
         }
 
         function loadQuestion() {
             if (currentQuestionIndex >= questions.length) {
+                // If all questions are done, call endQuiz without a specific count (defaults to total)
                 endQuiz();
                 return;
             }
 
             const q = questions[currentQuestionIndex];
             
-            // Build the specific image URL
             const imageUrl = `${IMAGE_BASE_URL}set${q.set}pic.jpg`; 
 
             // Reset UI
@@ -521,7 +543,7 @@
             if (normalizedUser === normalizedCorrect) {
                 if (!q.isCorrect) {
                     score++;
-                    q.isCorrect = true;
+                    q.isCorrect = true; // Mark question as correctly answered
                 }
                 
                 resultMessage.className = 'correct';
@@ -530,10 +552,12 @@
             } else {
                 resultMessage.className = 'wrong';
                 resultMessage.innerHTML = `❌ Wrong. The correct answer is: <strong>${correctAnswer}</strong>.`;
-                q.isCorrect = false;
+                q.isCorrect = false; // Mark question as incorrectly answered
             }
+            
+            // Mark the question as attempted
+            q.isAttempted = true;
 
-            // Lock the input and buttons after submission
             document.getElementById('answer-input').disabled = true;
             document.getElementById('submit-button').style.display = 'none';
             document.getElementById('next-button').style.display = 'inline-block';
@@ -546,9 +570,24 @@
             loadQuestion();
         }
         
-        function endQuiz() {
+        // Function called by the new "End Quiz" button
+        function endQuizEarly() {
+            if (!quizActive) return;
+            
+            // The number of questions seen is the current index + 1
+            const totalSeen = currentQuestionIndex + 1;
+            
+            // Call the shared end function with the number of questions seen
+            endQuiz(totalSeen); 
+        }
+
+        // Shared function for ending the quiz (either naturally or early)
+        function endQuiz(totalSeenQuestions = questions.length) {
             quizActive = false;
             document.getElementById('quiz-screen').style.display = 'none';
+            
+            // Calculate percentage
+            const percentage = totalSeenQuestions > 0 ? ((score / totalSeenQuestions) * 100).toFixed(1) : 0;
             
             let finalMessage = document.getElementById('final-message');
             if (!finalMessage) {
@@ -557,8 +596,13 @@
                 document.getElementById('quiz-container').appendChild(finalMessage);
             }
 
-            finalMessage.innerHTML = `<h2>Quiz Finished!</h2>
-                                      <p>You answered <strong>${score}</strong> out of ${questions.length} questions correctly.</p>
+            // Determine the message based on whether the quiz finished naturally or was ended early
+            const title = totalSeenQuestions === questions.length ? "Quiz Finished! 🎉" : "Quiz Ended Early! 🛑";
+
+            finalMessage.innerHTML = `<h2>${title}</h2>
+                                      <p>Total questions **seen** so far: <strong>${totalSeenQuestions}</strong></p>
+                                      <p>Total questions answered **correctly**: <strong>${score}</strong></p>
+                                      <p>Your Score Percentage: <strong>${percentage}%</strong></p>
                                       <button class="start-button" onclick="window.location.reload()">Start Over</button>`;
         }
 
@@ -572,7 +616,6 @@
                 answerInput.addEventListener('keypress', function(e) {
                     if (e.key === 'Enter') {
                         e.preventDefault();
-                        // Determine which action to perform on Enter: checkAnswer or nextQuestion
                         if (submitButton.style.display !== 'none') {
                             checkAnswer();
                         } else if (nextButton.style.display !== 'none') {
