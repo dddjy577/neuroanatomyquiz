@@ -1,8 +1,8 @@
-// Base URL for images uploaded to your GitHub Pages repository
-    const BASE_IMAGE_URL = 'https://ddjj577.github.io/neuroanatomyquiz/'; 
+// CRITICAL FIX: Base URL must point to the raw files for reliable loading
+    const BASE_IMAGE_URL = 'https://raw.githubusercontent.com/ddjj577/neuroanatomyquiz/main/'; 
 
     // ---------------------------------------------
-    // 1. QUIZ DATA (FINAL VERSION with FILE EXTENSIONS MATCHING THE GITHUB REPO: .jpg and .png)
+    // 1. QUIZ DATA (FINAL VERIFIED VERSION with correct filenames and extensions)
     // ---------------------------------------------
     const allQuizData = {
         "Set_1_basal ganglia answers": [
@@ -62,7 +62,7 @@
             { label: "12", structure: "adhesio intrathalamica", filename: "set 4 pic.jpg" }
         ],
         "Set_5_mesencephalon_coronal section answers": [
-            { label: "a", structure: "Medial geniculate nucleus", filename: "set 5 pic.png" }, // FILE EXTENSION CORRECTED TO LOWERCASE .png
+            { label: "a", structure: "Medial geniculate nucleus", filename: "set 5 pic.png" }, // Correct lowercase .png
             { label: "b", structure: "Lateral geniculate nucleus", filename: "set 5 pic.png" },
             { label: "c", structure: "Aqueductus cerebri", filename: "set 5 pic.png" },
             { label: "d", structure: "Crus cerebri", filename: "set 5 pic.png" },
@@ -165,154 +165,4 @@
             { label: "8", structure: "corpus geniculatum laterale", filename: "set 11 pic.jpg" },
             { label: "9", structure: "corpus geniculatum mediale", filename: "set 11 pic.jpg" },
             { label: "10", structure: "thalamus", filename: "set 11 pic.jpg" },
-            { label: "11", structure: "corpus pineale", filename: "set 11 pic.jpg" },
-            { label: "12", structure: "ventriculus III", filename: "set 11 pic.jpg" },
-            { label: "13", structure: "tuberculum cuneatus", filename: "set 11 pic.jpg" },
-            { label: "14", structure: "tuberculum gracilis", filename: "set 11 pic.jpg" },
-            { label: "15", structure: "fasciculus gracilis", filename: "set 11 pic.jpg" },
-            { label: "16", structure: "fasciculus cuneatus", filename: "set 11 pic.jpg" }
-        ],
-        "set 12 answers": [
-            { label: "1", structure: "Vermis", filename: "set 12 pic.jpg" },
-            { label: "2", structure: "tonsilla cerebelli", filename: "set 12 pic.jpg" },
-            { label: "3", structure: "lobus flocculo-nodularis", filename: "set 12 pic.jpg" },
-            { label: "4", structure: "pedunculus cerebelli superior", filename: "set 12 pic.jpg" },
-            { label: "5", structure: "pedunculus cerebelli media", filename: "set 12 pic.jpg" },
-            { label: "6", structure: "pedunculus cerebelli inferioir", filename: "set 12 pic.jpg" }
-        ],
-        "set 13 answers": [
-            { label: "1", structure: "n. oculomotorius (III)", filename: "set 13 pic.jpg" },
-            { label: "2", structure: "n. trochlearis (IV)", filename: "set 13 pic.jpg" },
-            { label: "3", structure: "n. trigeminus (V)", filename: "set 13 pic.jpg" },
-            { label: "4", structure: "n. abducens (VI)", filename: "set 13 pic.jpg" },
-            { label: "5", structure: "n. facialis (VII)", filename: "set 13 pic.jpg" },
-            { label: "6", structure: "n. vestibulo-cochlearis (VIII)", filename: "set 13 pic.jpg" },
-            { label: "7", structure: "n. glossopharyngeus (IX)", filename: "set 13 pic.jpg" },
-            { label: "8", structure: "n. vagus (X)", filename: "set 13 pic.jpg" },
-            { label: "9", structure: "n. accessorius (XI)", filename: "set 13 pic.jpg" },
-            { label: "10", structure: "n. hypoglossus (XII)", filename: "set 13 pic.jpg" },
-            { label: "11", structure: "pedunculus cerebri", filename: "set 13 pic.jpg" },
-            { label: "12", structure: "fossa interpeduncularis", filename: "set 13 pic.jpg" },
-            { label: "13", structure: "pyramis", filename: "set 13 pic.jpg" },
-            { label: "14", structure: "oliva", filename: "set 13 pic.jpg" },
-            { label: "15", structure: "infundibulum (hypophysis)", filename: "set 13 pic.jpg" },
-            { label: "16", structure: "pons", filename: "set 13 pic.jpg" },
-            { label: "17", structure: "corpus mammillare", filename: "set 13 pic.jpg" },
-            { label: "18", structure: "floccus", filename: "set 13 pic.jpg" }
-        ],
-        "set 14 answers": [
-            { label: "1", structure: "nucleus dentatus", filename: "set 14 pic.jpg" },
-            { label: "2", structure: "nucleus fastigii", filename: "set 14 pic.jpg" },
-            { label: "3", structure: "nucleus interpositus", filename: "set 14 pic.jpg" },
-            { label: "4", structure: "ventriculus IV", filename: "set 14 pic.jpg" },
-            { label: "5", structure: "pons", filename: "set 14 pic.jpg" },
-            { label: "6", structure: "flocculus", filename: "set 14 pic.jpg" }
-        ],
-        "set 15 answers": [
-            { label: "1", structure: "gyrus postcentralis", filename: "set 15 pic.jpg" },
-            { label: "2", structure: "gyrus precentralis", filename: "set 15 pic.jpg" },
-            { label: "3", structure: "sulcus centralis", filename: "set 15 pic.jpg" },
-            { label: "4", structure: "corona radiata", filename: "set 15 pic.jpg" },
-            { label: "5", structure: "capsula interna", filename: "set 15 pic.jpg" }
-        ],
-        "set 16 answers": [
-            { label: "1", structure: "fasciculus gracilis", filename: "set 16 pic.jpg" },
-            { label: "2", structure: "fasciculus cuneatus", filename: "set 16 pic.jpg" },
-            { label: "3", structure: "funiculus posterior", filename: "set 16 pic.jpg" },
-            { label: "4", structure: "funiculus lateralis", filename: "set 16 pic.jpg" },
-            { label: "5", structure: "funiculus anterior", filename: "set 16 pic.jpg" },
-            { label: "6", structure: "commissura anterior", filename: "set 16 pic.jpg" },
-            { label: "7", structure: "fissura mediana anterior", filename: "set 16 pic.jpg" },
-            { label: "8", structure: "cornu posterius", filename: "set 16 pic.jpg" },
-            { label: "9", structure: "cornu anterius", filename: "set 16 pic.jpg" },
-            { label: "10", structure: "cornu laterale", filename: "set 16 pic.jpg" },
-            { label: "11", structure: "canalis centralis", filename: "set 16 pic.jpg" }
-        ],
-        "set 17 answers": [
-            { label: "1", structure: "ÖVRE a. cerebri media", filename: "set 17 pic.jpg" },
-            { label: "2", structure: "UNDRE a. cerebri media", filename: "set 17 pic.jpg" },
-            { label: "3", structure: "ÖVRE a. cerebri ant.", filename: "set 17 pic.jpg" },
-            { label: "4", structure: "UNDRE a. cerebri ant.", filename: "set 17 pic.jpg" },
-            { label: "5", structure: "ÖVRE a cerebri post", filename: "set 17 pic.jpg" },
-            { label: "6", structure: "UNDRE a cerebri post", filename: "set 17 pic.jpg" },
-            { label: "7", structure: "ÖVRE a cerebelli sup", filename: "set 17 pic.jpg" },
-            { label: "8", structure: "UNDRE a cerebelli sup", filename: "set 17 pic.jpg" },
-            { label: "9", structure: "ÖVRE a cerebelli inferior ant. (AICA)", filename: "set 17 pic.jpg" },
-            { label: "10", structure: "UNDRE a cerebelli inferior post. (PICA)", filename: "set 17 pic.jpg" },
-            { label: "11", structure: "ÖVRE a cerebelli inferior post. (PICA)", filename: "set 17 pic.jpg" },
-            { label: "12", structure: "ÖVRE a basilaris", filename: "set 17 pic.jpg" },
-            { label: "13", structure: "UNDRE a basilaris", filename: "set 17 pic.jpg" }
-        ],
-        "set 18 answers": [
-            { label: "1", structure: "a communicants ant.", filename: "set 18 pic.jpg" },
-            { label: "2", structure: "a cerebri ant.", filename: "set 18 pic.jpg" },
-            { label: "3", structure: "a carotis interna", filename: "set 18 pic.jpg" },
-            { label: "4", structure: "a basilaris", filename: "set 18 pic.jpg" },
-            { label: "5", structure: "a spinalis ant.", filename: "set 18 pic.jpg" },
-            { label: "6", structure: "a communicants post.", filename: "set 18 pic.jpg" },
-            { label: "7", structure: "a cerebri post.", filename: "set 18 pic.jpg" },
-            { label: "8", structure: "a cerebri media", filename: "set 18 pic.jpg" },
-            { label: "9", structure: "a vertebralis", filename: "set 18 pic.jpg" },
-            { label: "10", structure: "n. opticus (n. II)", filename: "set 18 pic.jpg" },
-            { label: "11", structure: "hypophysis", filename: "set 18 pic.jpg" },
-            { label: "12", structure: "n. oculomotorius (n. III)", filename: "set 18 pic.jpg" },
-            { label: "13", structure: "n. trigeminus (n. V)", filename: "set 18 pic.jpg" },
-            { label: "14", structure: "n. abducens (n. VI)", filename: "set 18 pic.jpg" },
-            { label: "15", structure: "n. hypoglossus (n. XII)", filename: "set 18 pic.jpg" }
-        ],
-        "set 19 answers": [
-            { label: "1", structure: "a. cerebri anterior", filename: "set 19 pic.jpg" },
-            { label: "2", structure: "a. carotis interna", filename: "set 19 pic.jpg" },
-            { label: "3", structure: "a. cerebelli superior", filename: "set 19 pic.jpg" },
-            { label: "4", structure: "a. basilaris", filename: "set 19 pic.jpg" },
-            { label: "5", structure: "a. cerebelli inferior anterior (AICA)", filename: "set 19 pic.jpg" },
-            { label: "6", structure: "a. vertebralis", filename: "set 19 pic.jpg" },
-            { label: "7", structure: "a. cerebelli inferior posterior (PICA)", filename: "set 19 pic.jpg" }
-        ],
-        "set 20 answers": [
-            { label: "1", structure: "dura mater spinalis", filename: "set 20 pic.jpg" },
-            { label: "2", structure: "arachnoidea spinalis", filename: "set 20 pic.jpg" },
-            { label: "3", structure: "pia mater spinalis", filename: "set 20 pic.jpg" },
-            { label: "4", structure: "ligamentum denticulatum", filename: "set 20 pic.jpg" },
-            { label: "5", structure: "spatium subarachnoidale", filename: "set 20 pic.jpg" },
-            { label: "6", structure: "a. spinalis anterior", filename: "set 20 pic.jpg" },
-            { label: "7", structure: "a. spinalis posterior", filename: "set 20 pic.jpg" },
-            { label: "8", structure: "spatium subdurale", filename: "set 20 pic.jpg" },
-            { label: "9", structure: "radix anterior", filename: "set 20 pic.jpg" },
-            { label: "10", structure: "radix posterior", filename: "set 20 pic.jpg" }
-        ],
-        "set 21 answers": [
-            { label: "1", structure: "sinus sagittalis superior", filename: "set 21 pic.jpg" },
-            { label: "2", structure: "sinus sagittalis inferior", filename: "set 21 pic.jpg" },
-            { label: "3", structure: "HÖGER sinus rectus", filename: "set 21 pic.jpg" },
-            { label: "4", structure: "VÄNSTER sinus rektus", filename: "set 21 pic.jpg" },
-            { label: "5", structure: "HÖGER confluens sinuum", filename: "set 21 pic.jpg" },
-            { label: "6", structure: "VÄNSTER confluens sinuum", filename: "set 21 pic.jpg" },
-            { label: "7", structure: "sinus sphenoparietalis", filename: "set 21 pic.jpg" },
-            { label: "8", structure: "HÖGER sinus transversus", filename: "set 21 pic.jpg" },
-            { label: "9", structure: "VÄNSTER sinus transversus", filename: "set 21 pic.jpg" },
-            { label: "10", structure: "VÄNSTER sinus sigmoideus", filename: "set 21 pic.jpg" },
-            { label: "11", structure: "HÖGER sinus sigmoideus", filename: "set 21 pic.jpg" },
-            { label: "12", structure: "sinus cavernosus", filename: "set 21 pic.jpg" },
-            { label: "13", structure: "sinus petrosus superior", filename: "set 21 pic.jpg" },
-            { label: "14", structure: "foramen jugulare", filename: "set 21 pic.jpg" },
-            { label: "15", structure: "HÖGER vena cerebrimagna", filename: "set 21 pic.jpg" },
-            { label: "16", structure: "VÄNSTER vena cerebrimagna", filename: "set 21 pic.jpg" }
-        ],
-        "set 22 answers": [
-            { label: "1", structure: "cisterna cerebellomedullaris", filename: "set 22 pic.jpg" },
-            { label: "2", structure: "cisterna pontis", filename: "set 22 pic.jpg" },
-            { label: "3", structure: "cisterna interpeduncularis", filename: "set 22 pic.jpg" },
-            { label: "4", structure: "cisterna superior", filename: "set 22 pic.jpg" },
-            { label: "5", structure: "cisterna chiasmatis", filename: "set 22 pic.jpg" },
-            { label: "6", structure: "ryggmärgens subarachnoidalrum", filename: "set 22 pic.jpg" },
-            { label: "7", structure: "corpus callosum", filename: "set 22 pic.jpg" },
-            { label: "8", structure: "fornix", filename: "set 22 pic.jpg" },
-            { label: "9", structure: "thalamus", filename: "set 22 pic.jpg" },
-            { label: "10", structure: "mesencephalon", filename: "set 22 pic.jpg" },
-            { label: "11", structure: "aqueductus cerebri", filename: "set 22 pic.jpg" },
-            { label: "12", structure: "pons", filename: "set 22 pic.jpg" },
-            { label: "13", structure: "medulla oblongata", filename: "set 22 pic.jpg" },
-            { label: "14", structure: "fjärde ventrikeln", filename: "set 22 pic.jpg" }
-        ]
-    };
+            { label: "11", structure: "
