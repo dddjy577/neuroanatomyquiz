@@ -160,7 +160,7 @@
     </div>
 
     <script>
-        [cite_start]// Data parsed from the uploaded document [cite: 1]
+        // Data parsed from the uploaded document
         const QUIZ_DATA = [
             { set: 1, label: '1', answer: 'caput nucleus caudatus' },
             { set: 1, label: '2', answer: 'cauda nucleus caudatus' },
@@ -430,10 +430,14 @@
             { set: 22, label: '14', answer: 'fjärde ventrikeln' }
         ];
 
-        let questions = []; // Array of question objects for the current quiz mode
+        // --- Global State Variables ---
+        let questions = []; // Correctly initialized as empty array
         let currentQuestionIndex = 0;
         let score = 0;
         let quizActive = false;
+        
+        // Image link setup (corrected using Raw GitHub Content)
+        const IMAGE_BASE_URL = 'https://raw.githubusercontent.com/dddjy577/neuroanatomyquiz/main/'; 
 
         // --- Utility Functions ---
 
@@ -452,19 +456,23 @@
         // --- Core Quiz Logic ---
 
         function startQuiz(mode) {
-            questions = [...QUIZ_DATA]; // Copy the master list
+            // 1. Initialize questions array
+            questions = [...QUIZ_DATA]; 
 
             if (mode === 'random') {
                 shuffle(questions);
             }
 
+            // 2. Reset state
             currentQuestionIndex = 0;
             score = 0;
             quizActive = true;
 
+            // 3. Switch screens (This must happen successfully)
             document.getElementById('start-screen').style.display = 'none';
             document.getElementById('quiz-screen').style.display = 'block';
 
+            // 4. Load the first question
             loadQuestion();
         }
 
@@ -475,8 +483,8 @@
             }
 
             const q = questions[currentQuestionIndex];
-            // CORRECTED BASE URL: Uses the raw.githubusercontent.com path with the correct repository name
-            const IMAGE_BASE_URL = 'https://raw.githubusercontent.com/dddjy577/neuroanatomyquiz/main/'; 
+            
+            // Build the specific image URL
             const imageUrl = `${IMAGE_BASE_URL}set${q.set}pic.jpg`; 
 
             // Reset UI
@@ -564,6 +572,7 @@
                 answerInput.addEventListener('keypress', function(e) {
                     if (e.key === 'Enter') {
                         e.preventDefault();
+                        // Determine which action to perform on Enter: checkAnswer or nextQuestion
                         if (submitButton.style.display !== 'none') {
                             checkAnswer();
                         } else if (nextButton.style.display !== 'none') {
