@@ -109,6 +109,40 @@
             background-color: #5d005e;
         }
 
+        /* Styles for the new Set Jumper */
+        #set-jumper {
+            margin-top: 20px;
+            padding-top: 10px;
+            border-top: 2px solid var(--primary-color); /* Added a separator line */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        #set-jumper-controls {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        #set-jumper-controls select {
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 5px;
+            background-color: var(--info-bar-bg);
+            color: var(--text-color);
+            border: 1px solid var(--border-color);
+            min-width: 150px; /* Ensures space for the text */
+        }
+        .go-button { /* Applied start-button styling class */
+            background-color: var(--primary-color);
+            height: 50px;
+            width: 150px;
+            padding: 10px 20px;
+        }
+        .go-button:hover {
+            background-color: var(--primary-hover);
+        }
+
 
         #answer-input {
             padding: 10px;
@@ -159,10 +193,19 @@
         <h1>Neuroanatomy Quiz by Oben 🧠</h1>
 
         <div id="start-screen">
-            <h2>Select Quiz Mode</h2>
+            <h2>Select Quiz Mode (Starts at Set 1)</h2>
             <button class="start-button" onclick="startQuiz('ordered')">Ordered</button>
             <button class="start-button" onclick="startQuiz('random')">Random</button>
-        </div>
+            
+            <div id="set-jumper">
+                <h3>Jump to Set (Starts Ordered from Set)</h3>
+                <div id="set-jumper-controls">
+                    <select id="set-dropdown">
+                        </select>
+                    <button class="go-button" onclick="jumpToSet()">Go</button>
+                </div>
+            </div>
+            </div>
 
         <div id="quiz-screen" style="display: none;">
             <div id="info-bar">
@@ -408,6 +451,9 @@
             { set: 18, label: '13', answer: 'n. trigeminus (n. V)' },
             { set: 18, label: '14', answer: 'n. abducens (n. VI)' },
             { set: 18, label: '15', answer: 'n. hypoglossus (n. XII)' },
+            { set: 18, label: '16', answer: 'pons' },
+            { set: 18, label: '17', answer: 'corpus mammillare' },
+            { set: 18, label: '18', answer: 'floccus' },
             { set: 19, label: '1', answer: 'a. cerebri anterior' },
             { set: 19, label: '2', answer: 'a. carotis interna' },
             { set: 19, label: '3', answer: 'a. cerebelli superior' },
@@ -465,6 +511,8 @@
         
         // Image link setup (Corrected Raw GitHub Content)
         const IMAGE_BASE_URL = 'https://raw.githubusercontent.com/dddjy577/neuroanatomyquiz/main/'; 
+        // Max set number is 22, derived from the QUIZ_DATA
+        const MAX_SET = 22;
 
         // --- Utility Functions ---
 
@@ -478,14 +526,53 @@
                 [array[i], array[j]] = [array[j], array[i]];
             }
         }
+        
+        // Function to populate the set dropdown
+        function populateSetDropdown() {
+            const dropdown = document.getElementById('set-dropdown');
+            for (let i = 1; i <= MAX_SET; i++) {
+                const option = document.createElement('option');
+                option.value = i;
+                option.textContent = `Set ${i}`;
+                dropdown.appendChild(option);
+            }
+        }
+        
+        // FUNCTION MODIFIED TO ONLY START IN 'ORDERED' MODE
+        function jumpToSet() {
+            const startSet = parseInt(document.getElementById('set-dropdown').value);
+            if (startSet >= 1 && startSet <= MAX_SET) {
+                // Force 'ordered' mode when jumping to a set
+                startQuiz('ordered', startSet);
+            } else {
+                alert('Please select a valid set number.');
+            }
+        }
+
 
         // --- Core Quiz Logic ---
+        
+        // startQuiz handles the optional startSet parameter
+        function startQuiz(mode, startSet = 1) {
+            // Filter questions to include only those starting from the selected set
+            questions = QUIZ_DATA.filter(q => q.set >= startSet); 
 
-        function startQuiz(mode) {
-            questions = [...QUIZ_DATA]; 
+            if (questions.length === 0) {
+                alert(`No questions found starting from Set ${startSet}.`);
+                return;
+            }
 
             if (mode === 'random') {
                 shuffle(questions);
+            } else {
+                // For ordered mode, sort them by set and then label
+                questions.sort((a, b) => {
+                    if (a.set !== b.set) {
+                        return a.set - b.set;
+                    }
+                    // Sort by label for questions within the same set (e.g., '1' < '2' < 'a' < 'b')
+                    return String(a.label).localeCompare(String(b.label));
+                });
             }
 
             currentQuestionIndex = 0;
@@ -600,14 +687,17 @@
             const title = totalSeenQuestions === questions.length ? "Quiz Finished! 🎉" : "Quiz Ended Early! 🛑";
 
             finalMessage.innerHTML = `<h2>${title}</h2>
-                                      <p>Total questions **seen** so far: <strong>${totalSeenQuestions}</strong></p>
-                                      <p>Total questions answered **correctly**: <strong>${score}</strong></p>
-                                      <p>Your Score Percentage: <strong>${percentage}%</strong></p>
-                                      <button class="start-button" onclick="window.location.reload()">Start Over</button>`;
+                                         <p>Total questions **seen** so far: <strong>${totalSeenQuestions}</strong></p>
+                                         <p>Total questions answered **correctly**: <strong>${score}</strong></p>
+                                         <p>Your Score Percentage: <strong>${percentage}%</strong></p>
+                                         <button class="start-button" onclick="window.location.reload()">Start Over</button>`;
         }
 
         // Add event listener for 'Enter' key press on the input field
         document.addEventListener('DOMContentLoaded', () => {
+            // Populate the dropdown when the page loads
+            populateSetDropdown();
+            
             const answerInput = document.getElementById('answer-input');
             const nextButton = document.getElementById('next-button');
             const submitButton = document.getElementById('submit-button');
@@ -616,9 +706,12 @@
                 answerInput.addEventListener('keypress', function(e) {
                     if (e.key === 'Enter') {
                         e.preventDefault();
-                        if (submitButton.style.display !== 'none') {
+                        // If the submit button is visible, submit the answer
+                        if (submitButton.style.display !== 'none' && !answerInput.disabled) {
                             checkAnswer();
-                        } else if (nextButton.style.display !== 'none') {
+                        } 
+                        // If the next button is visible, go to the next question
+                        else if (nextButton.style.display !== 'none') {
                             nextQuestion();
                         }
                     }
@@ -626,6 +719,5 @@
             }
         });
     </script>
-
 </body>
 </html>
